@@ -1,0 +1,27 @@
+{
+    "name": "shopware/dbal-nested-set",
+    "description": "A Doctrine DBAL nested set implementation",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "Shopware\\DbalNestedSet\\": "src"
+        }
+    },
+    "require": {
+        "doctrine/dbal": "^2.5"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^6.2"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jan Philipp Pietrzyk",
+            "email": "jp@shopware.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "config": {
+        "bin-dir": "bin"
+    }
+}
