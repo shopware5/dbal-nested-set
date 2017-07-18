@@ -55,6 +55,4 @@ class NestedSetNodeInspectorReaderFacadeTest extends TestCase
         $this->assertFalse($this->nestedSet->isAncestor('tree', 'root_id', 2, 1));
         $this->assertFalse($this->nestedSet->isAncestor('tree', 'root_id', 1, 1));
     }
-
-
 }

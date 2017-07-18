@@ -30,7 +30,7 @@ class NestedSetNodeInspector
      */
     public function isRoot(int $nodeLeftValue): bool
     {
-        return ($nodeLeftValue == 1);
+        return ($nodeLeftValue === 1);
     }
 
     /**

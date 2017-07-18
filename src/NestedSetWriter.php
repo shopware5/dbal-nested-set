@@ -25,10 +25,16 @@ class NestedSetWriter
 
     /**
      * @param Connection $connection
+     * @param NestedSetReader $reader
+     * @param NestedSetNodeInspectorArrayFacade $inspector
      * @param NestedSetConventionsConfig $conventionsConfig
      */
-    public function __construct(Connection $connection, NestedSetReader $reader, NestedSetNodeInspectorArrayFacade $inspector, NestedSetConventionsConfig $conventionsConfig) {
-
+    public function __construct(
+        Connection $connection,
+        NestedSetReader $reader,
+        NestedSetNodeInspectorArrayFacade $inspector,
+        NestedSetConventionsConfig $conventionsConfig
+    ) {
         $this->connection = $connection;
         $this->reader = $reader;
         $this->setUpWithConnection($conventionsConfig, $connection);
@@ -203,7 +209,6 @@ class NestedSetWriter
         $level = ($parent['level'] + 1) - $child['level'];
 
         $this->updateNodePosition($tableExpression, $child, $parent['right'], $level);
-
     }
 
     /**
@@ -220,8 +225,7 @@ class NestedSetWriter
         $parent = $this->reader->fetchNodeData($tableExpression, $rootColumnName, $parentId);
         $child = $this->reader->fetchNodeData($tableExpression, $rootColumnName, $childId);
 
-        if (
-            $this->inspector->isEqual($parent, $child) ||
+        if ($this->inspector->isEqual($parent, $child) ||
             $this->inspector->isAncestor($child, $parent)
         ) {
             throw new InvalidNodeOperationException('Cannot move node as first child of itself or into a descendant');
@@ -246,8 +250,7 @@ class NestedSetWriter
         $sibling = $this->reader->fetchNodeData($tableExpression, $rootColumnName, $siblingId);
         $child = $this->reader->fetchNodeData($tableExpression, $rootColumnName, $childId);
 
-        if (
-            $this->inspector->isEqual($sibling, $child) ||
+        if ($this->inspector->isEqual($sibling, $child) ||
             $this->inspector->isAncestor($child, $sibling)
         ) {
             throw new InvalidNodeOperationException('Cannot move node as prev sibling of itself or into a descendant');
@@ -272,8 +275,7 @@ class NestedSetWriter
         $sibling = $this->reader->fetchNodeData($tableExpression, $rootColumnName, $siblingId);
         $child = $this->reader->fetchNodeData($tableExpression, $rootColumnName, $childId);
 
-        if (
-            $this->inspector->isEqual($sibling, $child) ||
+        if ($this->inspector->isEqual($sibling, $child) ||
             $this->inspector->isAncestor($child, $sibling)
         ) {
             throw new InvalidNodeOperationException('Cannot move node as next sibling of itself or into a descendant');

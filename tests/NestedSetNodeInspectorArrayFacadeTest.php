@@ -14,7 +14,7 @@ class NestedSetNodeInspectorArrayFacadeTest extends TestCase
     /**
      * @var NestedSetNodeInspectorArrayFacade
      */
-    private $insepctor;
+    private $inspector;
 
     /**
      * @var NestedSetReader
@@ -26,19 +26,19 @@ class NestedSetNodeInspectorArrayFacadeTest extends TestCase
         $connection = \NestedSetBootstrap::getConnection();
         $connection->exec(file_get_contents(__DIR__ . '/fixtures.sql'));
         \NestedSetBootstrap::insertDemoTree();
-        $this->insepctor = NestedSetFactory::createArrayNodeInspector();
+        $this->inspector = NestedSetFactory::createArrayNodeInspector();
         $this->reader = NestedSetFactory::createReader($connection, new NestedSetConventionsConfig('id', 'left', 'right', 'level'));
     }
+
     public function test_is_equal()
     {
-        $this->assertTrue($this->insepctor->isEqual(
+        $this->assertTrue($this->inspector->isEqual(
             $this->reader->fetchNodeData('tree', 'root_id', 2),
             $this->reader->fetchNodeData('tree', 'root_id', 2)
         ));
-        $this->assertFalse($this->insepctor->isEqual(
+        $this->assertFalse($this->inspector->isEqual(
             $this->reader->fetchNodeData('tree', 'root_id', 1),
             $this->reader->fetchNodeData('tree', 'root_id', 2)
         ));
     }
-
 }
