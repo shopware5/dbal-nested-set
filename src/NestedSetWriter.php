@@ -25,6 +25,8 @@ class NestedSetWriter
 
     /**
      * @param Connection $connection
+     * @param NestedSetReader $reader
+     * @param NestedSetNodeInspectorArrayFacade $inspector
      * @param NestedSetConventionsConfig $conventionsConfig
      */
     public function __construct(Connection $connection, NestedSetReader $reader, NestedSetNodeInspectorArrayFacade $inspector, NestedSetConventionsConfig $conventionsConfig) {
@@ -126,6 +128,7 @@ class NestedSetWriter
 
     /**
      * @param string $tableExpression
+     * @param string $rootColumnName
      * @param int $siblingId
      * @param array $data
      * @param array $types
@@ -153,6 +156,7 @@ class NestedSetWriter
 
     /**
      * @param string $tableExpression
+     * @param string $rootColumnName
      * @param int $siblingId
      * @param array $data
      * @param array $types
@@ -345,8 +349,10 @@ class NestedSetWriter
     /**
      * move node's and its children to location $destLeft and updates rest of tree
      *
-     * @param int     $destLeft    destination left value
-     * @todo Wrap in transaction
+     * @param string $tableExpression
+     * @param array $nodeData
+     * @param int $destLeft destination left value
+     * @param $levelDiff
      */
     private function updateNodePosition(string $tableExpression, array $nodeData, $destLeft, $levelDiff)
     {
@@ -389,8 +395,10 @@ class NestedSetWriter
      * Note: This method does wrap its database queries in a transaction. This should be done
      * by the invoking code.
      *
-     * @param int $first         First node to be shifted
-     * @param int $delta         Value to be shifted by, can be negative
+     * @param string $tableExpression
+     * @param int $rootValue
+     * @param int $first First node to be shifted
+     * @param int $delta Value to be shifted by, can be negative
      */
     private function applyDeltaToSubsequendNodes(string $tableExpression, int $rootValue, int $first, int $delta)
     {
@@ -427,6 +435,7 @@ class NestedSetWriter
      * by the invoking code.
      *
      * @param string $tableExpression
+     * @param int $rootValue
      * @param int $first First node to be shifted (L value)
      * @param int $last Last node to be shifted (L value)
      * @param int $delta Value to be shifted by, can be negative

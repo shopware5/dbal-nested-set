@@ -25,6 +25,7 @@ class NestedSetReader
 
     /**
      * @param string $tableExpression
+     * @param string $rootColumnName
      * @param int $nodeId
      * @return array
      */

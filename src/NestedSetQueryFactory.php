@@ -74,6 +74,7 @@ class NestedSetQueryFactory
     /**
      * @param string $tableExpression
      * @param string $queryAlias
+     * @param string $rootColumnName
      * @param int $parentId
      * @return QueryBuilder
      */
@@ -97,6 +98,7 @@ class NestedSetQueryFactory
     /**
      * @param string $tableExpression
      * @param string $queryAlias
+     * @param string $rootColumnName
      * @param int $nodeId
      * @return QueryBuilder
      */

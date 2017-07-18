@@ -14,7 +14,6 @@ class NestedSetNodeInspectorArrayFacade
 
     /**
      * @param NestedSetNodeInspector $inspector
-     * @param NestedSetReader $reader
      */
     public function __construct(NestedSetNodeInspector $inspector)
     {
