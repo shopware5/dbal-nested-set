@@ -27,9 +27,9 @@ You always need a configuration that sets up the basic column names of your impl
 
 ```php
 
-use Shopware\DbalNestedSet\NestedSetConventionsConfig;
+use Shopware\DbalNestedSet\NestedSetConfig;
 
-$config = new NestedSetConventionsConfig(
+$config = new NestedSetConfig(
     'id', // Primary key column name
     'left', // left column name
     'right',  // right column name
@@ -49,7 +49,7 @@ $writer = NestedSetFactory::createWriter($dbalConnection, $config);
 
 ### Modify the tree
 
-The library provides a `NestedSetWriter` class that contains all insert, move and update operations. All operations should be reminiscend of `Doctrine\DBAL\Connection::insert()` and `Doctrine\DBAL\Connection::update()` and just require plain data.
+The library provides a `NestedSetWriter` class that contains all insert, move and update operations. All operations should be reminiscent of `Doctrine\DBAL\Connection::insert()` and `Doctrine\DBAL\Connection::update()` and just require plain data.
 
 As an example you can use this to create a tree
 
@@ -102,6 +102,21 @@ $data = $queryFactory
             ->select('*')
             ->execute()
             ->fetchAll();
+```
+
+## Local development
+
+If you want to develop locally you may have to configure the database access through a little shell script:
+
+```bash
+#!/usr/bin/env bash
+
+export DB_USER='foo'
+export DB_PASSWORD='bar'
+export DB_HOST='baz'
+
+bin/phpunit
+
 ```
 
 

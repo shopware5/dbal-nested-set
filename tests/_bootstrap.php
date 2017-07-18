@@ -21,15 +21,18 @@ class NestedSetBootstrap
         $config = new Configuration();
         $connectionParams = array(
             'dbname' => 'nested_set',
-            'user' => 'root',
-            'password' => 'root',
-            'host' => 'localhost',
+            'user' => DB_USER,
+            'password' => DB_PASSWORD,
+            'host' => DB_HOST,
             'driver' => 'pdo_mysql',
         );
 
         return self::$connection = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
     }
 
+    /**
+     * @param int $rootId
+     */
     public static function validateTree(int $rootId)
     {
         $tree = self::getConnection()->fetchAll('SELECT * FROM tree WHERE root_id = :rootId ORDER BY `left`;', ['rootId' => $rootId]);
@@ -41,6 +44,9 @@ class NestedSetBootstrap
         }
     }
 
+    /**
+     * @param int $rootId
+     */
     public static function printTree(int $rootId)
     {
         $tree = self::getConnection()->fetchAll('SELECT * FROM tree WHERE root_id = :rootId ORDER BY `left`;', ['rootId' => $rootId]);
@@ -58,6 +64,9 @@ class NestedSetBootstrap
         }
     }
 
+    /**
+     * @param int $rootId
+     */
     public static function insertDemoTree(int $rootId = 1)
     {
         self::getConnection()->exec('
@@ -76,4 +85,22 @@ class NestedSetBootstrap
             ;
         ');
     }
+
+    /**
+     * @param string $name
+     * @param string $defaultValue
+     */
+    public static function getEnvOrSet(string $name, string $defaultValue) {
+        $value = getenv($name);
+
+        if(!$value) {
+            $value = $defaultValue;
+        }
+
+        define($name, $value);
+    }
 }
+
+NestedSetBootstrap::getEnvOrSet('DB_PASSWORD', 'root');
+NestedSetBootstrap::getEnvOrSet('DB_USER', 'root');
+NestedSetBootstrap::getEnvOrSet('DB_HOST', 'localhost');
