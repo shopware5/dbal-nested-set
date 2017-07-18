@@ -3,10 +3,13 @@
 namespace Shopware\DbalNestedSet;
 
 use Doctrine\DBAL\Connection;
+use Shopware\DbalNestedSet\Tool\NestedSetConfigAware;
+use Shopware\DbalNestedSet\Tool\NestedSetArrayNodeInspector;
+use Shopware\DbalNestedSet\Tool\NestedSetReader;
 
 class NestedSetWriter
 {
-    use NestedSetConventionConfigAware;
+    use NestedSetConfigAware;
 
     /**
      * @var Connection
@@ -19,17 +22,17 @@ class NestedSetWriter
     private $reader;
 
     /**
-     * @var NestedSetNodeInspectorArrayFacade
+     * @var NestedSetArrayNodeInspector
      */
     private $inspector;
 
     /**
      * @param Connection $connection
      * @param NestedSetReader $reader
-     * @param NestedSetNodeInspectorArrayFacade $inspector
-     * @param NestedSetConventionsConfig $conventionsConfig
+     * @param NestedSetArrayNodeInspector $inspector
+     * @param NestedSetConfig $conventionsConfig
      */
-    public function __construct(Connection $connection, NestedSetReader $reader, NestedSetNodeInspectorArrayFacade $inspector, NestedSetConventionsConfig $conventionsConfig) {
+    public function __construct(Connection $connection, NestedSetReader $reader, NestedSetArrayNodeInspector $inspector, NestedSetConfig $conventionsConfig) {
 
         $this->connection = $connection;
         $this->reader = $reader;
@@ -187,7 +190,7 @@ class NestedSetWriter
      * @param string $rootColumnName
      * @param int $parentId
      * @param int $childId
-     * @throws InvalidNodeOperationException
+     * @throws NestedSetExceptionInvalidNodeOperation
      */
     public function moveAsLastChild(string $tableExpression, string $rootColumnName, int $parentId, int $childId)
     {
@@ -201,7 +204,7 @@ class NestedSetWriter
             $this->inspector->isEqual($parent, $child) ||
             $this->inspector->isAncestor($child, $parent)
         ) {
-            throw new InvalidNodeOperationException('Cannot move node as last child of itself or into a descendant');
+            throw new NestedSetExceptionInvalidNodeOperation('Cannot move node as last child of itself or into a descendant');
         }
 
         $level = ($parent['level'] + 1) - $child['level'];
@@ -215,7 +218,7 @@ class NestedSetWriter
      * @param string $rootColumnName
      * @param int $parentId
      * @param int $childId
-     * @throws InvalidNodeOperationException
+     * @throws NestedSetExceptionInvalidNodeOperation
      */
     public function moveAsFirstChild(string $tableExpression, string $rootColumnName, int $parentId, int $childId)
     {
@@ -228,7 +231,7 @@ class NestedSetWriter
             $this->inspector->isEqual($parent, $child) ||
             $this->inspector->isAncestor($child, $parent)
         ) {
-            throw new InvalidNodeOperationException('Cannot move node as first child of itself or into a descendant');
+            throw new NestedSetExceptionInvalidNodeOperation('Cannot move node as first child of itself or into a descendant');
         }
 
         $level = ($parent['level'] + 1) - $child['level'];
@@ -241,7 +244,7 @@ class NestedSetWriter
      * @param string $rootColumnName
      * @param int $siblingId
      * @param int $childId
-     * @throws InvalidNodeOperationException
+     * @throws NestedSetExceptionInvalidNodeOperation
      */
     public function moveAsPrevSibling(string $tableExpression, string $rootColumnName, int $siblingId, int $childId)
     {
@@ -254,7 +257,7 @@ class NestedSetWriter
             $this->inspector->isEqual($sibling, $child) ||
             $this->inspector->isAncestor($child, $sibling)
         ) {
-            throw new InvalidNodeOperationException('Cannot move node as prev sibling of itself or into a descendant');
+            throw new NestedSetExceptionInvalidNodeOperation('Cannot move node as prev sibling of itself or into a descendant');
         }
 
         $level = $sibling['level'] - $child['level'];
@@ -267,7 +270,7 @@ class NestedSetWriter
      * @param string $rootColumnName
      * @param int $siblingId
      * @param int $childId
-     * @throws InvalidNodeOperationException
+     * @throws NestedSetExceptionInvalidNodeOperation
      */
     public function moveAsNextSibling(string $tableExpression, string $rootColumnName, int $siblingId, int $childId)
     {
@@ -280,7 +283,7 @@ class NestedSetWriter
             $this->inspector->isEqual($sibling, $child) ||
             $this->inspector->isAncestor($child, $sibling)
         ) {
-            throw new InvalidNodeOperationException('Cannot move node as next sibling of itself or into a descendant');
+            throw new NestedSetExceptionInvalidNodeOperation('Cannot move node as next sibling of itself or into a descendant');
         }
 
         $level = $sibling['level'] - $child['level'];

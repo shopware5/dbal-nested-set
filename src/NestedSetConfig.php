@@ -2,7 +2,7 @@
 
 namespace Shopware\DbalNestedSet;
 
-class NestedSetConventionsConfig
+class NestedSetConfig
 {
     /**
      * @var string
@@ -18,6 +18,7 @@ class NestedSetConventionsConfig
      * @var string
      */
     private $levelColumnName;
+
     /**
      * @var string
      */

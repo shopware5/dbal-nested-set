@@ -4,10 +4,12 @@ namespace Shopware\DbalNestedSet;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
+use Shopware\DbalNestedSet\Tool\NestedSetConfigAware;
+use Shopware\DbalNestedSet\Tool\NestedSetReader;
 
 class NestedSetQueryFactory
 {
-    use NestedSetConventionConfigAware;
+    use NestedSetConfigAware;
 
     /**
      * @var Connection
@@ -21,9 +23,9 @@ class NestedSetQueryFactory
 
     /**
      * @param Connection $connection
-     * @param NestedSetConventionsConfig $conventionsConfig
+     * @param NestedSetConfig $conventionsConfig
      */
-    public function __construct(Connection $connection, NestedSetReader $reader, NestedSetConventionsConfig $conventionsConfig)
+    public function __construct(Connection $connection, NestedSetReader $reader, NestedSetConfig $conventionsConfig)
     {
         $this->connection = $connection;
         $this->reader = $reader;

@@ -3,18 +3,18 @@
 namespace Shopware\DbalNestedSetTest;
 
 use PHPUnit\Framework\TestCase;
-use Shopware\DbalNestedSet\InvalidNodeOperationException;
-use Shopware\DbalNestedSet\NestedSetConventionsConfig;
+use Shopware\DbalNestedSet\NestedSetExceptionInvalidNodeOperation;
+use Shopware\DbalNestedSet\NestedSetConfig;
 use Shopware\DbalNestedSet\NestedSetFactory;
-use Shopware\DbalNestedSet\NestedSetReader;
 use Shopware\DbalNestedSet\NestedSetWriter;
+use Shopware\DbalNestedSet\Tool\NestedSetReader;
 
 class NestedSetWriterTest extends TestCase
 {
     /**
      * @var NestedSetWriter
      */
-    private $nestedSet;
+    private $writer;
 
     /**
      * @var NestedSetReader
@@ -24,14 +24,14 @@ class NestedSetWriterTest extends TestCase
     public function setUp()
     {
         $connection = \NestedSetBootstrap::getConnection();
-        $connection->exec(file_get_contents(__DIR__ . '/fixtures.sql'));
-        $this->nestedSet = NestedSetFactory::createWriter($connection, new NestedSetConventionsConfig('id', 'left', 'right', 'level'));
-        $this->reader = NestedSetFactory::createReader($connection, new NestedSetConventionsConfig('id', 'left', 'right', 'level'));
+        $connection->exec(file_get_contents(__DIR__ . '/_fixtures.sql'));
+        $this->writer = NestedSetFactory::createWriter($connection, new NestedSetConfig('id', 'left', 'right', 'level'));
+        $this->reader = new NestedSetReader($connection, new NestedSetConfig('id', 'left', 'right', 'level'));
     }
 
     public function test_insertAsLastChild_by_recreating_the_demo_tree()
     {
-        $nestedSet = $this->nestedSet;
+        $nestedSet = $this->writer;
 
         $nestedSet->insertRoot('tree', 'root_id', 100, ['name' => 'Clothing']);
         $nestedSet->insertAsLastChild('tree', 'root_id', 1, ['name' => 'Men']);
@@ -61,7 +61,7 @@ class NestedSetWriterTest extends TestCase
 
     public function test_insertAsFirstChild_by_recreating_the_demo_tree()
     {
-        $nestedSet = $this->nestedSet;
+        $nestedSet = $this->writer;
 
         $nestedSet->insertRoot('tree', 'root_id', 100, ['name' => 'Clothing']);
         $nestedSet->insertAsFirstChild('tree', 'root_id', 1, ['name' => 'Women']);
@@ -91,7 +91,7 @@ class NestedSetWriterTest extends TestCase
 
     public function test_insertAsNextSibling_by_recreating_the_demo_tree_using_insert_as_fist_child_where_necessary()
     {
-        $nestedSet = $this->nestedSet;
+        $nestedSet = $this->writer;
 
         $nestedSet->insertRoot('tree', 'root_id', 100, ['name' => 'Clothing']);
         $nestedSet->insertAsFirstChild('tree', 'root_id', 1, ['name' => 'Men']);
@@ -121,7 +121,7 @@ class NestedSetWriterTest extends TestCase
 
     public function test_insertAsPrevSibling_by_recreating_the_demo_tree_using_insert_as_last_child_where_necessary()
     {
-        $nestedSet = $this->nestedSet;
+        $nestedSet = $this->writer;
 
         $nestedSet->insertRoot('tree', 'root_id', 100, ['name' => 'Clothing']);
         $nestedSet->insertAsLastChild('tree', 'root_id', 1, ['name' => 'Women']);
@@ -153,7 +153,7 @@ class NestedSetWriterTest extends TestCase
     {
         \NestedSetBootstrap::insertDemoTree();
 
-        $this->nestedSet->moveAsLastChild('tree', 'root_id', 3, 7);
+        $this->writer->moveAsLastChild('tree', 'root_id', 3, 7);
 
         \NestedSetBootstrap::validateTree(1);
 
@@ -174,15 +174,15 @@ class NestedSetWriterTest extends TestCase
     {
         \NestedSetBootstrap::insertDemoTree();
 
-        $this->expectException(InvalidNodeOperationException::class);
-        $this->nestedSet->moveAsLastChild('tree', 'root_id', 7, 3);
+        $this->expectException(NestedSetExceptionInvalidNodeOperation::class);
+        $this->writer->moveAsLastChild('tree', 'root_id', 7, 3);
     }
 
     public function test_move_as_first_child()
     {
         \NestedSetBootstrap::insertDemoTree();
 
-        $this->nestedSet->moveAsFirstChild('tree', 'root_id', 3, 7);
+        $this->writer->moveAsFirstChild('tree', 'root_id', 3, 7);
 
         \NestedSetBootstrap::validateTree(1);
 
@@ -203,15 +203,15 @@ class NestedSetWriterTest extends TestCase
     {
         \NestedSetBootstrap::insertDemoTree();
 
-        $this->expectException(InvalidNodeOperationException::class);
-        $this->nestedSet->moveAsFirstChild('tree', 'root_id', 7, 3);
+        $this->expectException(NestedSetExceptionInvalidNodeOperation::class);
+        $this->writer->moveAsFirstChild('tree', 'root_id', 7, 3);
     }
 
     public function test_move_as_prev_sibling()
     {
         \NestedSetBootstrap::insertDemoTree();
 
-        $this->nestedSet->moveAsPrevSibling('tree', 'root_id', 4, 7);
+        $this->writer->moveAsPrevSibling('tree', 'root_id', 4, 7);
 
         \NestedSetBootstrap::validateTree(1);
 
@@ -233,15 +233,15 @@ class NestedSetWriterTest extends TestCase
     {
         \NestedSetBootstrap::insertDemoTree();
 
-        $this->expectException(InvalidNodeOperationException::class);
-        $this->nestedSet->moveAsPrevSibling('tree', 'root_id', 4, 1);
+        $this->expectException(NestedSetExceptionInvalidNodeOperation::class);
+        $this->writer->moveAsPrevSibling('tree', 'root_id', 4, 1);
     }
 
     public function test_move_as_next_sibling()
     {
         \NestedSetBootstrap::insertDemoTree();
 
-        $this->nestedSet->moveAsNextSibling('tree', 'root_id', 4, 7);
+        $this->writer->moveAsNextSibling('tree', 'root_id', 4, 7);
 
         \NestedSetBootstrap::validateTree(1);
 
@@ -262,15 +262,15 @@ class NestedSetWriterTest extends TestCase
     {
         \NestedSetBootstrap::insertDemoTree();
 
-        $this->expectException(InvalidNodeOperationException::class);
-        $this->nestedSet->moveAsNextSibling('tree', 'root_id', 4, 1);
+        $this->expectException(NestedSetExceptionInvalidNodeOperation::class);
+        $this->writer->moveAsNextSibling('tree', 'root_id', 4, 1);
     }
 
     public function test_delete()
     {
         \NestedSetBootstrap::insertDemoTree();
 
-        $this->nestedSet->removeNode('tree', 'root_id', 2);
+        $this->writer->removeNode('tree', 'root_id', 2);
 
         \NestedSetBootstrap::validateTree(1);
 

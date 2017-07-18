@@ -1,10 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace Shopware\DbalNestedSet;
+namespace Shopware\DbalNestedSet\Tool;
 
 use Doctrine\DBAL\Connection;
+use Shopware\DbalNestedSet\NestedSetConfig;
 
-trait NestedSetConventionConfigAware
+trait NestedSetConfigAware
 {
     /**
      * @var string
@@ -32,10 +33,10 @@ trait NestedSetConventionConfigAware
     private $rootCol;
 
     /**
-     * @param NestedSetConventionsConfig $conventionsConfig
+     * @param NestedSetConfig $conventionsConfig
      * @param Connection $connection
      */
-    private function setUpWithConnection(NestedSetConventionsConfig $conventionsConfig, Connection $connection)
+    private function setUpWithConnection(NestedSetConfig $conventionsConfig, Connection $connection)
     {
         $this->pkCol = $connection->quoteIdentifier($conventionsConfig->getPrimaryKeyColumnName());
         $this->leftCol = $connection->quoteIdentifier($conventionsConfig->getLeftColumnName());

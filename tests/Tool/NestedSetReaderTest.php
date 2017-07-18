@@ -3,29 +3,28 @@
 namespace Shopware\DbalNestedSetTest;
 
 use PHPUnit\Framework\TestCase;
-use Shopware\DbalNestedSet\NestedSetConventionsConfig;
-use Shopware\DbalNestedSet\NestedSetFactory;
-use Shopware\DbalNestedSet\NestedSetReader;
-use Shopware\DbalNestedSet\NodeNotFoundException;
+use Shopware\DbalNestedSet\NestedSetConfig;
+use Shopware\DbalNestedSet\NestedSetExceptionNodeNotFound;
+use Shopware\DbalNestedSet\Tool\NestedSetReader;
 
 class NestedSetReaderTest extends TestCase
 {
     /**
      * @var NestedSetReader
      */
-    private $nestedSet;
+    private $reader;
 
     public function setUp()
     {
         $connection = \NestedSetBootstrap::getConnection();
-        $connection->exec(file_get_contents(__DIR__ . '/fixtures.sql'));
+        $connection->exec(file_get_contents(__DIR__ . '/../_fixtures.sql'));
         \NestedSetBootstrap::insertDemoTree();
-        $this->nestedSet = NestedSetFactory::createReader($connection, new NestedSetConventionsConfig('id', 'left', 'right', 'level'));
+        $this->reader = new NestedSetReader($connection, new NestedSetConfig('id', 'left', 'right', 'level'));
     }
 
     public function test_fetch_a_node()
     {
-        $node = $this->nestedSet
+        $node = $this->reader
             ->fetchNodeData('tree', 'root_id', 2);
 
         $this->assertEquals(2, $node['id']);
@@ -37,8 +36,8 @@ class NestedSetReaderTest extends TestCase
 
     public function test_fetch_a_node_not_found()
     {
-        $this->expectException(NodeNotFoundException::class);
-        $this->nestedSet
+        $this->expectException(NestedSetExceptionNodeNotFound::class);
+        $this->reader
             ->fetchNodeData('tree', 'root_id', 123465789);
     }
 

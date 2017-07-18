@@ -2,10 +2,13 @@
 
 namespace Shopware\DbalNestedSet;
 
-class NestedSetNodeInspectorReaderFacade
+use Shopware\DbalNestedSet\Tool\NestedSetArrayNodeInspector;
+use Shopware\DbalNestedSet\Tool\NestedSetReader;
+
+class NestedSetTableNodeInspector
 {
     /**
-     * @var NestedSetNodeInspectorArrayFacade
+     * @var NestedSetArrayNodeInspector
      */
     private $inspector;
 
@@ -15,10 +18,10 @@ class NestedSetNodeInspectorReaderFacade
     private $reader;
 
     /**
-     * @param NestedSetNodeInspectorArrayFacade $inspector
+     * @param NestedSetArrayNodeInspector $inspector
      * @param NestedSetReader $reader
      */
-    public function __construct(NestedSetNodeInspectorArrayFacade $inspector, NestedSetReader $reader)
+    public function __construct(NestedSetArrayNodeInspector $inspector, NestedSetReader $reader)
     {
         $this->inspector = $inspector;
         $this->reader = $reader;
