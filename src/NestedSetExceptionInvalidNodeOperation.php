@@ -4,5 +4,4 @@ namespace Shopware\DbalNestedSet;
 
 class NestedSetExceptionInvalidNodeOperation extends \InvalidArgumentException
 {
-
 }

@@ -5,15 +5,16 @@ require_once __DIR__ . '/../vendor/autoload.php';
 use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\Connection;
 
-class NestedSetBootstrap {
-
+class NestedSetBootstrap
+{
     /**
      * @var Connection
      */
     public static $connection;
 
-    public static function getConnection(): Connection {
-        if(self::$connection) {
+    public static function getConnection(): Connection
+    {
+        if (self::$connection) {
             return self::$connection;
         }
 
@@ -47,7 +48,7 @@ class NestedSetBootstrap {
         echo "\n";
         echo "id\tLeft\tRight\tLevel\tName\n";
         foreach ($tree as $node) {
-            echo $node['id'] . "\t" . $node['left'] . "\t " . $node['right'] . "\t " . $node['level'] ."\t";
+            echo $node['id'] . "\t" . $node['left'] . "\t " . $node['right'] . "\t " . $node['level'] . "\t";
 
             for ($i = 0; $i < $node['level']; $i++) {
                 echo "\t";

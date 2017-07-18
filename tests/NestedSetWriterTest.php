@@ -3,8 +3,8 @@
 namespace Shopware\DbalNestedSetTest;
 
 use PHPUnit\Framework\TestCase;
-use Shopware\DbalNestedSet\NestedSetExceptionInvalidNodeOperation;
 use Shopware\DbalNestedSet\NestedSetConfig;
+use Shopware\DbalNestedSet\NestedSetExceptionInvalidNodeOperation;
 use Shopware\DbalNestedSet\NestedSetFactory;
 use Shopware\DbalNestedSet\NestedSetWriter;
 use Shopware\DbalNestedSet\Tool\NestedSetReader;
@@ -102,7 +102,7 @@ class NestedSetWriterTest extends TestCase
         $nestedSet->insertAsNextSibling('tree', 'root_id', 6, ['name' => 'Blouses']);
         $nestedSet->insertAsFirstChild('tree', 'root_id', 4, ['name' => 'Jackets']);
         $nestedSet->insertAsFirstChild('tree', 'root_id', 4, ['name' => 'Slacks']);
-        $nestedSet->insertAsFirstChild('tree', 'root_id',5, ['name' => 'Evening Gowns']);
+        $nestedSet->insertAsFirstChild('tree', 'root_id', 5, ['name' => 'Evening Gowns']);
         $nestedSet->insertAsNextSibling('tree', 'root_id', 10, ['name' => 'Sun Dresses']);
         \NestedSetBootstrap::validateTree(100);
 
@@ -226,7 +226,6 @@ class NestedSetWriterTest extends TestCase
         $this->assertNode(3, 16, 21, 1, 1);
         $this->assertNode(8, 17, 18, 2, 1);
         $this->assertNode(9, 19, 20, 2, 1);
-
     }
 
     public function test_move_as_prev_sibling_throws()
@@ -306,7 +305,7 @@ class NestedSetWriterTest extends TestCase
 
         echo "\n";
         foreach ($tree as $node) {
-            echo '$this->assertNode(' . $node['id'] .  ', ' . $node['left'] . ', ' . $node['right'] . ', ' . $node['level'] . ', 100);' . "\n";
+            echo '$this->assertNode(' . $node['id'] . ', ' . $node['left'] . ', ' . $node['right'] . ', ' . $node['level'] . ', 100);' . "\n";
         }
     }
 }

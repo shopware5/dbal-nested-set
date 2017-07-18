@@ -3,8 +3,8 @@
 namespace Shopware\DbalNestedSet;
 
 use Doctrine\DBAL\Connection;
-use Shopware\DbalNestedSet\Tool\NestedSetConfigAware;
 use Shopware\DbalNestedSet\Tool\NestedSetArrayNodeInspector;
+use Shopware\DbalNestedSet\Tool\NestedSetConfigAware;
 use Shopware\DbalNestedSet\Tool\NestedSetReader;
 
 class NestedSetWriter
@@ -32,8 +32,8 @@ class NestedSetWriter
      * @param NestedSetArrayNodeInspector $inspector
      * @param NestedSetConfig $conventionsConfig
      */
-    public function __construct(Connection $connection, NestedSetReader $reader, NestedSetArrayNodeInspector $inspector, NestedSetConfig $conventionsConfig) {
-
+    public function __construct(Connection $connection, NestedSetReader $reader, NestedSetArrayNodeInspector $inspector, NestedSetConfig $conventionsConfig)
+    {
         $this->connection = $connection;
         $this->reader = $reader;
         $this->setUpWithConnection($conventionsConfig, $connection);
@@ -210,7 +210,6 @@ class NestedSetWriter
         $level = ($parent['level'] + 1) - $child['level'];
 
         $this->updateNodePosition($tableExpression, $child, $parent['right'], $level);
-
     }
 
     /**
@@ -345,7 +344,7 @@ class NestedSetWriter
                 $types
             );
 
-        return (int)$this->connection
+        return (int) $this->connection
             ->lastInsertId();
     }
 

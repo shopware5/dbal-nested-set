@@ -24,6 +24,7 @@ class NestedSetQueryFactory
     /**
      * @param Connection $connection
      * @param NestedSetConfig $conventionsConfig
+     * @param NestedSetReader $reader
      */
     public function __construct(Connection $connection, NestedSetReader $reader, NestedSetConfig $conventionsConfig)
     {
@@ -43,8 +44,7 @@ class NestedSetQueryFactory
             ->from($this->connection->quoteIdentifier($tableExpression), $queryAlias)
             ->where("{$queryAlias}.{$this->leftCol} = :{$queryAlias}Left")
             ->orderBy("{$queryAlias}.{$this->leftCol}")
-            ->setParameter("{$queryAlias}Left", 1)
-        ;
+            ->setParameter("{$queryAlias}Left", 1);
     }
 
     /**
@@ -69,8 +69,7 @@ class NestedSetQueryFactory
             ->setParameter("{$queryAlias}Level", 1 + $nodeData['level'])
             ->setParameter("{$queryAlias}Left", $nodeData['left'])
             ->setParameter("{$queryAlias}Right", $nodeData['right'])
-            ->setParameter("{$queryAlias}Root", $nodeData['root_id'])
-        ;
+            ->setParameter("{$queryAlias}Root", $nodeData['root_id']);
     }
 
     /**
@@ -93,8 +92,7 @@ class NestedSetQueryFactory
             ->orderBy("{$queryAlias}.{$this->leftCol}")
             ->setParameter("{$queryAlias}Left", $nodeData['left'])
             ->setParameter("{$queryAlias}Right", $nodeData['right'])
-            ->setParameter("{$queryAlias}Root", $nodeData['root_id'])
-        ;
+            ->setParameter("{$queryAlias}Root", $nodeData['root_id']);
     }
 
     /**
@@ -117,7 +115,6 @@ class NestedSetQueryFactory
             ->orderBy("{$queryAlias}.{$this->leftCol}", 'DESC')
             ->setParameter("{$queryAlias}Left", $nodeData['left'])
             ->setParameter("{$queryAlias}Right", $nodeData['right'])
-            ->setParameter("{$queryAlias}Root", $nodeData['root_id'])
-        ;
+            ->setParameter("{$queryAlias}Root", $nodeData['root_id']);
     }
 }

@@ -3,8 +3,8 @@
 namespace Shopware\DbalNestedSet;
 
 use Doctrine\DBAL\Connection;
-use Shopware\DbalNestedSet\Tool\NestedSetNodeInspector;
 use Shopware\DbalNestedSet\Tool\NestedSetArrayNodeInspector;
+use Shopware\DbalNestedSet\Tool\NestedSetNodeInspector;
 use Shopware\DbalNestedSet\Tool\NestedSetReader;
 
 class NestedSetFactory

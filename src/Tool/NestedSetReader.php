@@ -29,8 +29,8 @@ class NestedSetReader
      * @param string $tableExpression
      * @param string $rootColumnName
      * @param int $nodeId
-     * @return array
      * @throws NestedSetExceptionNodeNotFound
+     * @return array
      */
     public function fetchNodeData(string $tableExpression, string $rootColumnName, int $nodeId): array
     {
@@ -51,7 +51,7 @@ class NestedSetReader
             ->execute()
             ->fetch(\PDO::FETCH_ASSOC);
 
-        if(!$data) {
+        if (!$data) {
             throw new NestedSetExceptionNodeNotFound("No node found with id $nodeId");
         }
 

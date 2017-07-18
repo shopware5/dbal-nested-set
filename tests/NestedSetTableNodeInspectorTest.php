@@ -1,6 +1,5 @@
 <?php declare(strict_types=1);
 
-
 namespace Shopware\DbalNestedSetTest;
 
 use PHPUnit\Framework\TestCase;
@@ -55,6 +54,4 @@ class NestedSetTableNodeInspectorTest extends TestCase
         $this->assertFalse($this->inspector->isAncestor('tree', 'root_id', 2, 1));
         $this->assertFalse($this->inspector->isAncestor('tree', 'root_id', 1, 1));
     }
-
-
 }

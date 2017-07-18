@@ -1,6 +1,5 @@
 <?php declare(strict_types=1);
 
-
 namespace Shopware\DbalNestedSetTest\Tool;
 
 use PHPUnit\Framework\TestCase;
@@ -41,5 +40,4 @@ class NestedSetArrayNodeInspectorTest extends TestCase
             $this->reader->fetchNodeData('tree', 'root_id', 2)
         ));
     }
-
 }

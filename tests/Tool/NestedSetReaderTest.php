@@ -40,5 +40,4 @@ class NestedSetReaderTest extends TestCase
         $this->reader
             ->fetchNodeData('tree', 'root_id', 123465789);
     }
-
 }

@@ -27,7 +27,6 @@ class NestedSetTableNodeInspector
         $this->reader = $reader;
     }
 
-
     /**
      * determines if node is leaf
      *
