@@ -34,8 +34,7 @@ class NestedSetConventionsConfig
         string $leftColumnName,
         string $rightColumnName,
         string $levelColumnName
-    )
-    {
+    ) {
         $this->primaryKeyColumnName = $primaryKeyColumnName;
         $this->leftColumnName = $leftColumnName;
         $this->rightColumnName = $rightColumnName;

@@ -47,7 +47,7 @@ class NestedSetReader
             ->execute()
             ->fetch(\PDO::FETCH_ASSOC);
 
-        if(!$data) {
+        if (!$data) {
             throw new NodeNotFoundException("No node found with id $nodeId");
         }
 
