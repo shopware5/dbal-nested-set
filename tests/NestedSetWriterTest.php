@@ -24,7 +24,7 @@ class NestedSetWriterTest extends TestCase
     public function setUp()
     {
         $connection = \NestedSetBootstrap::getConnection();
-        $connection->exec(file_get_contents(__DIR__ . '/_fixtures.sql'));
+        \NestedSetBootstrap::importTable();
         $this->writer = NestedSetFactory::createWriter($connection, new NestedSetConfig('id', 'left', 'right', 'level'));
         $this->reader = new NestedSetReader($connection, new NestedSetConfig('id', 'left', 'right', 'level'));
     }

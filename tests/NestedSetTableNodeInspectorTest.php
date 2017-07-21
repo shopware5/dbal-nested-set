@@ -17,7 +17,7 @@ class NestedSetTableNodeInspectorTest extends TestCase
     public function setUp()
     {
         $connection = \NestedSetBootstrap::getConnection();
-        $connection->exec(file_get_contents(__DIR__ . '/_fixtures.sql'));
+        \NestedSetBootstrap::importTable();
         \NestedSetBootstrap::insertDemoTree();
         $this->inspector = NestedSetFactory::createTableNodeInspector($connection, new NestedSetConfig('id', 'left', 'right', 'level'));
     }

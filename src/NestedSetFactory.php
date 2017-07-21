@@ -12,6 +12,16 @@ class NestedSetFactory
     /**
      * @param Connection $connection
      * @param NestedSetConfig $config
+     * @return NestedSetTableFactory
+     */
+    public static function createTableFactory(Connection $connection, NestedSetConfig $config): NestedSetTableFactory
+    {
+        return new NestedSetTableFactory($connection, $config);
+    }
+
+    /**
+     * @param Connection $connection
+     * @param NestedSetConfig $config
      * @return NestedSetWriter
      */
     public static function createWriter(Connection $connection, NestedSetConfig $config): NestedSetWriter

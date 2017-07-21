@@ -17,7 +17,7 @@ class NestedSetQueryFactoryTest extends TestCase
     public function setUp()
     {
         $connection = \NestedSetBootstrap::getConnection();
-        $connection->exec(file_get_contents(__DIR__ . '/_fixtures.sql'));
+        \NestedSetBootstrap::importTable();
         \NestedSetBootstrap::insertDemoTree();
         $this->queryFactory = NestedSetFactory::createQueryFactory($connection, new NestedSetConfig('id', 'left', 'right', 'level'));
     }
