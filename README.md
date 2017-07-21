@@ -47,6 +47,28 @@ $writer = NestedSetFactory::createWriter($dbalConnection, $config);
 
 ```
 
+### Create a tree
+
+You may want to create a normalized schema for nested set tables, this can be accomplished through the `NestedSetTableFactory`. It will create the base DDL for a tree with indexes. If you want to add a simple tree with a name column and an autoincrement id it will look like this:
+
+```php
+$tableFactory = NestedSetFactory::createTableFactory($connection, new NestedSetConfig('id', 'left', 'right', 'level'));
+
+$schema = new \Doctrine\DBAL\Schema\Schema();
+$table = $tableFactory->createTable(
+    $schema,
+    'tree', // table name
+    'root_id' // nested set root id
+);
+$table->addColumn('id', 'integer', ['unsigned' => true, 'autoincrement' => true]);
+$table->addColumn('name', 'string', ['length' => 255]);
+$table->setPrimaryKey(['id']);
+
+$addSql = $schema->toSql($connection->getDatabasePlatform());
+```
+
+Of course this is optional and may be accomplished through any schema configuration tool.
+
 ### Modify the tree
 
 The library provides a `NestedSetWriter` class that contains all insert, move and update operations. All operations should be reminiscent of `Doctrine\DBAL\Connection::insert()` and `Doctrine\DBAL\Connection::update()` and just require plain data.
