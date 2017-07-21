@@ -19,13 +19,13 @@ class NestedSetBootstrap
         }
 
         $config = new Configuration();
-        $connectionParams = array(
+        $connectionParams = [
             'dbname' => 'nested_set',
             'user' => DB_USER,
             'password' => DB_PASSWORD,
             'host' => DB_HOST,
             'driver' => 'pdo_mysql',
-        );
+        ];
 
         return self::$connection = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
     }
@@ -127,7 +127,7 @@ class NestedSetBootstrap
     {
         $value = getenv($name);
 
-        if (!$value) {
+        if (false === $value) {
             $value = $defaultValue;
         }
 

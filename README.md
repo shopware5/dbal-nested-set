@@ -52,7 +52,7 @@ $writer = NestedSetFactory::createWriter($dbalConnection, $config);
 You may want to create a normalized schema for nested set tables, this can be accomplished through the `NestedSetTableFactory`. It will create the base DDL for a tree with indexes. If you want to add a simple tree with a name column and an autoincrement id it will look like this:
 
 ```php
-$tableFactory = NestedSetFactory::createTableFactory($connection, new NestedSetConfig('id', 'left', 'right', 'level'));
+$tableFactory = NestedSetFactory::createTableFactory($connection, $config);
 
 $schema = new \Doctrine\DBAL\Schema\Schema();
 $table = $tableFactory->createTable(
