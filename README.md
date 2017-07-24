@@ -106,7 +106,7 @@ $writer->moveAsNextSibling('tree', 'root_id', 4, 7);
 You may want to retrieve information about different nodes. This can be done through the `NestedSetTableNodeInspector`.
 
 ```php
-$inspector = NestedSetFactory::createTableNodeInspector($connection, new NestedSetConfig('id', 'left', 'right', 'level'));
+$inspector = NestedSetFactory::createTableNodeInspector($connection, $config);
 
 $inspector->isLeaf('tree', 'root_id', 9); // true | false
 $inspector->isAncestor('tree', 'root_id', 1, 2) // true | false
@@ -117,7 +117,7 @@ $inspector->isAncestor('tree', 'root_id', 1, 2) // true | false
 The `NestedSetQueryFactory` helps retrieve a set of nodes from the tree. Since the library has no concept of entities it will only prepare query builders for you ready to add selects, joins and other conditions.
 
 ```php
-$queryFactory = NestedSetFactory::createQueryFactory($connection, new NestedSetConfig('id', 'left', 'right', 'level'));
+$queryFactory = NestedSetFactory::createQueryFactory($connection, $config);
 $data = $queryFactory
             ->createChildrenQueryBuilder('tree', 't', 'root_id', 2)
             ->select('*')
