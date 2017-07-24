@@ -79,7 +79,7 @@ class NestedSetWriter
      * @param array $types
      * @return int id of the new node
      */
-    public function insertAsFirstChild(string $tableExpression, string $rootColumnName, int $parentId, array $data, array $types = array()): int
+    public function insertAsFirstChild(string $tableExpression, string $rootColumnName, int $parentId, array $data, array $types = []): int
     {
         $this->setRootColName($rootColumnName, $this->connection);
         $parentData = $this->reader->fetchNodeData($tableExpression, $rootColumnName, $parentId);
@@ -109,7 +109,7 @@ class NestedSetWriter
      * @param array $types
      * @return int id of the new node
      */
-    public function insertAsLastChild(string $tableExpression, string $rootColumnName, int $parentId, array $data, array $types = array()): int
+    public function insertAsLastChild(string $tableExpression, string $rootColumnName, int $parentId, array $data, array $types = []): int
     {
         $this->setRootColName($rootColumnName, $this->connection);
         $parentData = $this->reader->fetchNodeData($tableExpression, $rootColumnName, $parentId);
@@ -137,7 +137,7 @@ class NestedSetWriter
      * @param array $types
      * @return int
      */
-    public function insertAsPrevSibling(string $tableExpression, string $rootColumnName, int $siblingId, array $data, array $types = array()): int
+    public function insertAsPrevSibling(string $tableExpression, string $rootColumnName, int $siblingId, array $data, array $types = []): int
     {
         $this->setRootColName($rootColumnName, $this->connection);
         $childData = $this->reader->fetchNodeData($tableExpression, $rootColumnName, $siblingId);
@@ -165,7 +165,7 @@ class NestedSetWriter
      * @param array $types
      * @return int
      */
-    public function insertAsNextSibling(string $tableExpression, string $rootColumnName, int $siblingId, array $data, array $types = array()): int
+    public function insertAsNextSibling(string $tableExpression, string $rootColumnName, int $siblingId, array $data, array $types = []): int
     {
         $this->setRootColName($rootColumnName, $this->connection);
         $childData = $this->reader->fetchNodeData($tableExpression, $rootColumnName, $siblingId);
@@ -394,8 +394,6 @@ class NestedSetWriter
     /**
      * adds '$delta' to all Left and Right values that are >= '$first'. '$delta' can also be negative.
      *
-     * Note: This method does wrap its database queries in a transaction. This should be done
-     * by the invoking code.
      *
      * @param string $tableExpression
      * @param int $rootValue
@@ -432,9 +430,6 @@ class NestedSetWriter
     /**
      * adds '$delta' to all Left and Right values that are >= '$first' and <= '$last'.
      * '$delta' can also be negative.
-     *
-     * Note: This method does wrap its database queries in a transaction. This should be done
-     * by the invoking code.
      *
      * @param string $tableExpression
      * @param int $rootValue
