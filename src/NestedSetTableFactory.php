@@ -38,15 +38,15 @@ class NestedSetTableFactory
 
         $treeTable = $schema->createTable($this->connection->quoteIdentifier($tableName));
 
-        $treeTable->addColumn($this->leftCol, 'integer', array('unsigned' => true));
-        $treeTable->addColumn($this->rightCol, 'integer', array('unsigned' => true));
-        $treeTable->addColumn($this->levelCol, 'integer', array('unsigned' => true));
-        $treeTable->addColumn($this->rootCol, 'integer', array('unsigned' => true));
+        $treeTable->addColumn($this->leftCol, 'integer', ['unsigned' => true]);
+        $treeTable->addColumn($this->rightCol, 'integer', ['unsigned' => true]);
+        $treeTable->addColumn($this->levelCol, 'integer', ['unsigned' => true]);
+        $treeTable->addColumn($this->rootCol, 'integer', ['unsigned' => true]);
 
-        $treeTable->addIndex(array($this->leftCol))
-            ->addIndex(array($this->rightCol))
-            ->addIndex(array($this->levelCol))
-            ->addIndex(array($this->rootCol));
+        $treeTable->addIndex([$this->leftCol])
+            ->addIndex([$this->rightCol])
+            ->addIndex([$this->levelCol])
+            ->addIndex([$this->rootCol]);
 
         return $treeTable;
     }
