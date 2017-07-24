@@ -1,11 +1,11 @@
 Doctrine DBAL Nested Set
 ====================
 
-A multi root Nested Set implementation for DBAL users.
+A multi root nested set implementation for DBAL users.
 
 ## Description
 
-This library provides you write, read and inspection classes for nested sets. Solely relying on the Doctrine DBAL.
+This library provides you write, read and inspection classes for nested sets with multiple root nodes per table. Solely relying on the Doctrine DBAL.
 
 Contrary to other solutions this library has clear boundaries and leaves the software design up to you.
 
@@ -49,7 +49,7 @@ $writer = NestedSetFactory::createWriter($dbalConnection, $config);
 
 ### Create a tree
 
-You may want to create a normalized schema for nested set tables, this can be accomplished through the `NestedSetTableFactory`. It will create the base DDL for a tree with indexes. If you want to add a simple tree with a name column and an autoincrement id it will look like this:
+You may want to create a normalized schema for nested set tables, this can be accomplished through the `NestedSetTableFactory`. It will create the base DDL for a tree with indexes. So if you want to add a simple tree with a name column and an autoincrement id it will look like this:
 
 ```php
 $tableFactory = NestedSetFactory::createTableFactory($connection, $config);
@@ -114,8 +114,7 @@ $inspector->isAncestor('tree', 'root_id', 1, 2) // true | false
 
 ### Inspect the tree
 
-The `NestedSetQueryFactory` helps retrieve a set of nodes from the tree. Since the library has no concept of entities it will only prepare query builders for you ready for you to add selects joins and other conditions.
-
+The `NestedSetQueryFactory` helps retrieve a set of nodes from the tree. Since the library has no concept of entities it will only prepare query builders for you ready to add selects, joins and other conditions.
 
 ```php
 $queryFactory = NestedSetFactory::createQueryFactory($connection, new NestedSetConfig('id', 'left', 'right', 'level'));
@@ -138,8 +137,4 @@ export DB_PASSWORD='bar'
 export DB_HOST='baz'
 
 bin/phpunit
-
 ```
-
-
-
