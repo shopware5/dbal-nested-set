@@ -3,7 +3,7 @@
 namespace Shopware\DbalNestedSetTest;
 
 use PHPUnit\Framework\TestCase;
-use Shopware\DbalNestedSet\NestedSetConventionsConfig;
+use Shopware\DbalNestedSet\NestedSetConfig;
 use Shopware\DbalNestedSet\NestedSetFactory;
 use Shopware\DbalNestedSet\NestedSetQueryFactory;
 
@@ -12,19 +12,19 @@ class NestedSetQueryFactoryTest extends TestCase
     /**
      * @var NestedSetQueryFactory
      */
-    private $nestedSet;
+    private $queryFactory;
 
     public function setUp()
     {
         $connection = \NestedSetBootstrap::getConnection();
-        $connection->exec(file_get_contents(__DIR__ . '/fixtures.sql'));
+        \NestedSetBootstrap::importTable();
         \NestedSetBootstrap::insertDemoTree();
-        $this->nestedSet = NestedSetFactory::createQueryFactory($connection, new NestedSetConventionsConfig('id', 'left', 'right', 'level'));
+        $this->queryFactory = NestedSetFactory::createQueryFactory($connection, new NestedSetConfig('id', 'left', 'right', 'level'));
     }
 
     public function test_fetch_all_children()
     {
-        $qb = $this->nestedSet->createChildrenQueryBuilder('tree', 't', 'root_id', 2)
+        $qb = $this->queryFactory->createChildrenQueryBuilder('tree', 't', 'root_id', 2)
             ->select('*');
 
         $sql = $qb->getSQL();
@@ -40,7 +40,7 @@ class NestedSetQueryFactoryTest extends TestCase
 
     public function test_fetch_subtree()
     {
-        $qb = $this->nestedSet->createSubtreeQueryBuilder('tree', 't', 'root_id', 2)
+        $qb = $this->queryFactory->createSubtreeQueryBuilder('tree', 't', 'root_id', 2)
             ->select('*');
 
         $sql = $qb->getSQL();
@@ -58,7 +58,7 @@ class NestedSetQueryFactoryTest extends TestCase
 
     public function test_fetch_parents()
     {
-        $qb = $this->nestedSet->createParentsQueryBuilder('tree', 't', 'root_id', 2)
+        $qb = $this->queryFactory->createParentsQueryBuilder('tree', 't', 'root_id', 2)
             ->select('*');
 
         $sql = $qb->getSQL();
@@ -73,7 +73,7 @@ class NestedSetQueryFactoryTest extends TestCase
 
     public function test_fetch_parents_on_leaf()
     {
-        $qb = $this->nestedSet->createParentsQueryBuilder('tree', 't', 'root_id', 6)
+        $qb = $this->queryFactory->createParentsQueryBuilder('tree', 't', 'root_id', 6)
             ->select('*');
 
         $sql = $qb->getSQL();
@@ -90,7 +90,7 @@ class NestedSetQueryFactoryTest extends TestCase
 
     public function test_fetch_all_roots()
     {
-        $qb = $this->nestedSet->createFetchRootsQueryBuilder('tree', 't')
+        $qb = $this->queryFactory->createFetchRootsQueryBuilder('tree', 't')
             ->select('*');
 
         $sql = $qb->getSQL();

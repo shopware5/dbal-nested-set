@@ -1,12 +1,14 @@
 <?php declare(strict_types=1);
 
-namespace Shopware\DbalNestedSet;
+namespace Shopware\DbalNestedSet\Tool;
 
 use Doctrine\DBAL\Connection;
+use Shopware\DbalNestedSet\NestedSetConfig;
+use Shopware\DbalNestedSet\NestedSetExceptionNodeNotFound;
 
 class NestedSetReader
 {
-    use NestedSetConventionConfigAware;
+    use NestedSetConfigAware;
 
     /**
      * @var Connection
@@ -15,9 +17,9 @@ class NestedSetReader
 
     /**
      * @param Connection $connection
-     * @param NestedSetConventionsConfig $conventionsConfig
+     * @param NestedSetConfig $conventionsConfig
      */
-    public function __construct(Connection $connection, NestedSetConventionsConfig $conventionsConfig)
+    public function __construct(Connection $connection, NestedSetConfig $conventionsConfig)
     {
         $this->connection = $connection;
         $this->setUpWithConnection($conventionsConfig, $connection);
@@ -25,7 +27,9 @@ class NestedSetReader
 
     /**
      * @param string $tableExpression
+     * @param string $rootColumnName
      * @param int $nodeId
+     * @throws NestedSetExceptionNodeNotFound
      * @return array
      */
     public function fetchNodeData(string $tableExpression, string $rootColumnName, int $nodeId): array
@@ -47,8 +51,8 @@ class NestedSetReader
             ->execute()
             ->fetch(\PDO::FETCH_ASSOC);
 
-        if(!$data) {
-            throw new NodeNotFoundException("No node found with id $nodeId");
+        if (!$data) {
+            throw new NestedSetExceptionNodeNotFound("No node found with id $nodeId");
         }
 
         $data = array_map('intval', $data);

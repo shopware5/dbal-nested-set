@@ -1,0 +1,35 @@
+language: php
+
+
+sudo: false
+
+dist: trusty
+services:
+  - mysql
+
+cache:
+  directories:
+    - vendor
+    - $HOME/.composer/cache
+
+php:
+  - 7.0
+  - 7.1
+
+env:
+  global:
+    - DB_HOST="localhost"
+    - DB_USER="root"
+    - DB_PASSWORD=""
+
+services:
+  - mysql
+
+before_script:
+    - composer self-update
+    - composer install
+    - mysql -e 'CREATE DATABASE nested_set;'
+
+script:
+    - bin/phpunit
+    - ./php-cs-fixer fix --dry-run

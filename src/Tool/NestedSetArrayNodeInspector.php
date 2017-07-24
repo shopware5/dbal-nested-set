@@ -1,11 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace Shopware\DbalNestedSet;
+namespace Shopware\DbalNestedSet\Tool;
 
 /**
  * expects an array as node as provided by NestedSetReader
  */
-class NestedSetNodeInspectorArrayFacade
+class NestedSetArrayNodeInspector
 {
     /**
      * @var NestedSetNodeInspector
@@ -14,13 +14,11 @@ class NestedSetNodeInspectorArrayFacade
 
     /**
      * @param NestedSetNodeInspector $inspector
-     * @param NestedSetReader $reader
      */
     public function __construct(NestedSetNodeInspector $inspector)
     {
         $this->inspector = $inspector;
     }
-
 
     /**
      * determines if node is leaf

@@ -1,12 +1,12 @@
 <?php declare(strict_types=1);
 
-namespace Shopware\DbalNestedSet;
+namespace Shopware\DbalNestedSet\Tool;
 
 /**
  * Provides inspections for nodes and node relations
  *
- * @see NestedSetNodeInspectorReaderFacade
- * @see NestedSetNodeInspectorArrayFacade
+ * @see NestedSetTableNodeInspector
+ * @see NestedSetArrayNodeInspector
  */
 class NestedSetNodeInspector
 {
@@ -30,7 +30,7 @@ class NestedSetNodeInspector
      */
     public function isRoot(int $nodeLeftValue): bool
     {
-        return ($nodeLeftValue == 1);
+        return ($nodeLeftValue === 1);
     }
 
     /**

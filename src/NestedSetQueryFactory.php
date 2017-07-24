@@ -4,10 +4,12 @@ namespace Shopware\DbalNestedSet;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
+use Shopware\DbalNestedSet\Tool\NestedSetConfigAware;
+use Shopware\DbalNestedSet\Tool\NestedSetReader;
 
 class NestedSetQueryFactory
 {
-    use NestedSetConventionConfigAware;
+    use NestedSetConfigAware;
 
     /**
      * @var Connection
@@ -21,9 +23,10 @@ class NestedSetQueryFactory
 
     /**
      * @param Connection $connection
-     * @param NestedSetConventionsConfig $conventionsConfig
+     * @param NestedSetConfig $conventionsConfig
+     * @param NestedSetReader $reader
      */
-    public function __construct(Connection $connection, NestedSetReader $reader, NestedSetConventionsConfig $conventionsConfig)
+    public function __construct(Connection $connection, NestedSetReader $reader, NestedSetConfig $conventionsConfig)
     {
         $this->connection = $connection;
         $this->reader = $reader;
@@ -41,8 +44,7 @@ class NestedSetQueryFactory
             ->from($this->connection->quoteIdentifier($tableExpression), $queryAlias)
             ->where("{$queryAlias}.{$this->leftCol} = :{$queryAlias}Left")
             ->orderBy("{$queryAlias}.{$this->leftCol}")
-            ->setParameter("{$queryAlias}Left", 1)
-        ;
+            ->setParameter("{$queryAlias}Left", 1);
     }
 
     /**
@@ -67,13 +69,13 @@ class NestedSetQueryFactory
             ->setParameter("{$queryAlias}Level", 1 + $nodeData['level'])
             ->setParameter("{$queryAlias}Left", $nodeData['left'])
             ->setParameter("{$queryAlias}Right", $nodeData['right'])
-            ->setParameter("{$queryAlias}Root", $nodeData['root_id'])
-        ;
+            ->setParameter("{$queryAlias}Root", $nodeData['root_id']);
     }
 
     /**
      * @param string $tableExpression
      * @param string $queryAlias
+     * @param string $rootColumnName
      * @param int $parentId
      * @return QueryBuilder
      */
@@ -90,13 +92,13 @@ class NestedSetQueryFactory
             ->orderBy("{$queryAlias}.{$this->leftCol}")
             ->setParameter("{$queryAlias}Left", $nodeData['left'])
             ->setParameter("{$queryAlias}Right", $nodeData['right'])
-            ->setParameter("{$queryAlias}Root", $nodeData['root_id'])
-        ;
+            ->setParameter("{$queryAlias}Root", $nodeData['root_id']);
     }
 
     /**
      * @param string $tableExpression
      * @param string $queryAlias
+     * @param string $rootColumnName
      * @param int $nodeId
      * @return QueryBuilder
      */
@@ -113,7 +115,6 @@ class NestedSetQueryFactory
             ->orderBy("{$queryAlias}.{$this->leftCol}", 'DESC')
             ->setParameter("{$queryAlias}Left", $nodeData['left'])
             ->setParameter("{$queryAlias}Right", $nodeData['right'])
-            ->setParameter("{$queryAlias}Root", $nodeData['root_id'])
-        ;
+            ->setParameter("{$queryAlias}Root", $nodeData['root_id']);
     }
 }
