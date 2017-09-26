@@ -207,9 +207,10 @@ class NestedSetWriter
             throw new NestedSetExceptionInvalidNodeOperation('Cannot move node as last child of itself or into a descendant');
         }
 
-        $level = ($parent['level'] + 1) - $child['level'];
+        $level = ($parent['level'] + 1);
 
-        $this->updateNodePosition($tableExpression, $child, $parent['right'], $level);
+        $this->updateLevel($tableExpression, $child['id'], $level);
+        $this->updateNodePosition($tableExpression, $child, $parent['right'], $level - $child['level']);
     }
 
     /**
@@ -233,9 +234,10 @@ class NestedSetWriter
             throw new NestedSetExceptionInvalidNodeOperation('Cannot move node as first child of itself or into a descendant');
         }
 
-        $level = ($parent['level'] + 1) - $child['level'];
+        $level = ($parent['level'] + 1);
 
-        $this->updateNodePosition($tableExpression, $child, $parent['left'] + 1, $level);
+        $this->updateLevel($tableExpression, $child['id'], $level);
+        $this->updateNodePosition($tableExpression, $child, $parent['left'] + 1, $level - $child['level']);
     }
 
     /**
@@ -259,9 +261,10 @@ class NestedSetWriter
             throw new NestedSetExceptionInvalidNodeOperation('Cannot move node as prev sibling of itself or into a descendant');
         }
 
-        $level = $sibling['level'] - $child['level'];
+        $level = $sibling['level'];
 
-        $this->updateNodePosition($tableExpression, $child, $sibling['left'], $level);
+        $this->updateLevel($tableExpression, $child['id'], $level);
+        $this->updateNodePosition($tableExpression, $child, $sibling['left'], $level - $child['level']);
     }
 
     /**
@@ -285,9 +288,10 @@ class NestedSetWriter
             throw new NestedSetExceptionInvalidNodeOperation('Cannot move node as next sibling of itself or into a descendant');
         }
 
-        $level = $sibling['level'] - $child['level'];
+        $level = $sibling['level'];
 
-        $this->updateNodePosition($tableExpression, $child, $sibling['right'] + 1, $level);
+        $this->updateLevel($tableExpression, $child['id'], $level);
+        $this->updateNodePosition($tableExpression, $child, $sibling['right'] + 1, $level - $child['level']);
     }
 
     /**
@@ -464,5 +468,19 @@ class NestedSetWriter
                 'rootValue' => $rootValue,
             ])
             ->execute();
+    }
+
+    /**
+     * @param string $tableExpression
+     * @param int $id
+     * @param int $level
+     */
+    private function updateLevel(string $tableExpression, int $id, int $level)
+    {
+        $this->connection->update(
+            $tableExpression,
+            [$this->levelCol => $level],
+            [$this->pkCol => $id]
+        );
     }
 }
