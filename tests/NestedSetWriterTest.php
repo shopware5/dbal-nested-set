@@ -162,6 +162,27 @@ class NestedSetWriterTest extends TestCase
         $this->assertNode(11, 18, 19, 3, 1);
     }
 
+    public function test_move_as_last_child_with_different_levels()
+    {
+        \NestedSetBootstrap::insertDemoTree();
+
+        $this->writer->moveAsLastChild('tree', 'root_id', 3, 2); //make men last child of women
+
+        \NestedSetBootstrap::validateTree(1);
+
+        $this->assertNode(1, 1, 22, 0, 1);
+        $this->assertNode(3, 2, 21, 1, 1);
+        $this->assertNode(7, 3, 8, 2, 1);
+        $this->assertNode(10, 4, 5, 3, 1);
+        $this->assertNode(11, 6, 7, 3, 1);
+        $this->assertNode(8, 9, 10, 2, 1);
+        $this->assertNode(9, 11, 12, 2, 1);
+        $this->assertNode(2, 13, 20, 2, 1);
+        $this->assertNode(4, 14, 19, 3, 1);
+        $this->assertNode(5, 15, 16, 4, 1);
+        $this->assertNode(6, 17, 18, 4, 1);
+    }
+
     public function test_move_as_last_child_throws()
     {
         \NestedSetBootstrap::insertDemoTree();
