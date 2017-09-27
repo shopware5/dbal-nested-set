@@ -102,4 +102,89 @@ class NestedSetQueryFactoryTest extends TestCase
         $this->assertCount(1, $rows);
         $this->assertEquals('Clothing', $rows[0]['name']);
     }
+
+    public function test_fetch_subtree_with_selected_nodes()
+    {
+        $qb = $this->queryFactory
+            ->createSubtreeThroughMultipleNodesQueryBuilder('tree', 't', 'root_id', [2, 7])
+            ->select('*');
+
+        $this->assertSubTree(
+            [
+                'Clothing',
+                'Mens',
+                'Suits',
+                'Women',
+                'Dresses',
+                'Evening Growns',
+                'Sun Dresses',
+                'Skirts',
+                'Blouses',
+            ],
+            $qb->execute()->fetchAll()
+        );
+
+        $qb = $this->queryFactory
+            ->createSubtreeThroughMultipleNodesQueryBuilder('tree', 't', 'root_id', [3, 2])
+            ->select('*');
+
+        $this->assertSubTree(
+            [
+                'Clothing',
+                'Mens',
+                'Suits',
+                'Women',
+                'Dresses',
+                'Skirts',
+                'Blouses',
+            ],
+            $qb->execute()->fetchAll()
+        );
+    }
+
+    public function test_fetch_subtree_with_selected_nodes_uses_the_depth_parameter()
+    {
+        $qb = $this->queryFactory
+            ->createSubtreeThroughMultipleNodesQueryBuilder('tree', 't', 'root_id', [2, 3], 2)
+            ->select('*');
+
+        $this->assertSubTree(
+            [
+                'Clothing',
+                'Mens',
+                'Suits',
+                'Slacks',
+                'Jackets',
+                'Women',
+                'Dresses',
+                'Evening Growns',
+                'Sun Dresses',
+                'Skirts',
+                'Blouses',
+            ],
+            $qb->execute()->fetchAll()
+        );
+
+        $qb = $this->queryFactory
+            ->createSubtreeThroughMultipleNodesQueryBuilder('tree', 't', 'root_id', [3, 2], 0)
+            ->select('*');
+
+        $this->assertSubTree(
+            [
+                'Clothing',
+                'Mens',
+                'Women',
+            ],
+            $qb->execute()->fetchAll()
+        );
+    }
+
+    private function assertSubTree(array $expectedNames, array $rows)
+    {
+        $this->assertCount(count($expectedNames), $rows, print_r($rows, true));
+
+        foreach ($expectedNames as $index => $name) {
+            $this->assertEquals($name, $rows[$index]['name']);
+        }
+    }
 }
