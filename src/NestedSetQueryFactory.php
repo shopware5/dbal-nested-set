@@ -143,6 +143,7 @@ class NestedSetQueryFactory
 
         $directNodeSubSelect = $this->connection->createQueryBuilder()
             ->select([
+                "{$queryAlias}directNode." . $this->pkCol,
                 "{$queryAlias}directNode." . $this->leftCol,
                 "{$queryAlias}directNode." . $this->rightCol,
                 "{$queryAlias}directNode." . $this->levelCol,
@@ -151,8 +152,10 @@ class NestedSetQueryFactory
             ->from($this->connection->quoteIdentifier($tableExpression), "{$queryAlias}directNode")
             ->andWhere("{$queryAlias}directNode.{$this->pkCol} IN (:{$queryAlias}nodeIds)");
 
-        $siblingQuery = $this->connection->createQueryBuilder()
+
+        $parentQuery = $this->connection->createQueryBuilder()
             ->select([
+                "{$queryAlias}SiblingNode." . $this->pkCol,
                 "{$queryAlias}SiblingNode." . $this->leftCol,
                 "{$queryAlias}SiblingNode." . $this->rightCol,
                 "{$queryAlias}SiblingNode." . $this->levelCol,
@@ -161,18 +164,29 @@ class NestedSetQueryFactory
             ->from($this->connection->quoteIdentifier($tableExpression), "{$queryAlias}SiblingNode")
             ->innerJoin(
                 "{$queryAlias}SiblingNode",
+                $this->connection->quoteIdentifier($tableExpression),
+                "{$queryAlias}ParentNode",
+                "
+                    {$queryAlias}SiblingNode.{$this->leftCol} >= {$queryAlias}ParentNode.{$this->leftCol} 
+                AND {$queryAlias}SiblingNode.{$this->rightCol} <= {$queryAlias}ParentNode.{$this->rightCol} 
+                AND {$queryAlias}SiblingNode.{$this->levelCol} = {$queryAlias}ParentNode.{$this->levelCol} + 1
+                AND {$queryAlias}SiblingNode.{$this->rootCol} = {$queryAlias}ParentNode.{$this->rootCol}
+                "
+            )
+            ->innerJoin(
+                "{$queryAlias}ParentNode",
                 '(' . $directNodeSubSelect->getSQL() . ')',
                 "{$queryAlias}SelectedNode",
                 "
-                    {$queryAlias}SiblingNode.{$this->leftCol} >= {$queryAlias}SelectedNode.{$this->leftCol} 
-                AND {$queryAlias}SiblingNode.{$this->rightCol} >= {$queryAlias}SelectedNode.{$this->rightCol} 
-                AND {$queryAlias}SiblingNode.{$this->levelCol} = {$queryAlias}SelectedNode.{$this->levelCol}
-                AND {$queryAlias}SiblingNode.{$this->rootCol} = {$queryAlias}SelectedNode.{$this->rootCol}
+                    {$queryAlias}ParentNode.{$this->leftCol} < {$queryAlias}SelectedNode.{$this->leftCol} 
+                AND {$queryAlias}ParentNode.{$this->rightCol} > {$queryAlias}SelectedNode.{$this->rightCol} 
+                AND {$queryAlias}ParentNode.{$this->rootCol} = {$queryAlias}SelectedNode.{$this->rootCol}
                 "
             );
 
         $childrenQuery = $this->connection->createQueryBuilder()
             ->select([
+                "{$queryAlias}ChildNode." . $this->pkCol,
                 "{$queryAlias}ChildNode." . $this->leftCol,
                 "{$queryAlias}ChildNode." . $this->rightCol,
                 "{$queryAlias}ChildNode." . $this->levelCol,
@@ -191,18 +205,30 @@ class NestedSetQueryFactory
                 "
             );
 
+        $rootQuery = $this->connection->createQueryBuilder()
+            ->select([
+                "{$queryAlias}RootNode." . $this->pkCol,
+                "{$queryAlias}RootNode." . $this->leftCol,
+                "{$queryAlias}RootNode." . $this->rightCol,
+                "{$queryAlias}RootNode." . $this->levelCol,
+                "{$queryAlias}RootNode." . $this->rootCol,
+            ])
+            ->from($this->connection->quoteIdentifier($tableExpression), "{$queryAlias}RootNode")
+            ->innerJoin(
+                "{$queryAlias}RootNode",
+                '(' . $directNodeSubSelect->getSQL() . ')',
+                "{$queryAlias}SelectedNode",
+                " 
+                    {$queryAlias}RootNode.{$this->levelCol} = 0
+                AND {$queryAlias}RootNode.{$this->rootCol} = {$queryAlias}SelectedNode.{$this->rootCol}
+                "
+            );
+
         $idQuery = $this->connection->createQueryBuilder()
             ->select("{$queryAlias}Group.{$this->pkCol}")
-            ->from($this->connection->quoteIdentifier($tableExpression), "{$queryAlias}Group")
-            ->innerJoin(
-                "{$queryAlias}Group",
-                '((' . $childrenQuery->getSQL() . ') UNION (' . $siblingQuery->getSQL() . '))',
-                "{$queryAlias}SourceNode",
-                "
-                    {$queryAlias}Group.{$this->leftCol} <= {$queryAlias}SourceNode.{$this->leftCol} 
-                AND {$queryAlias}Group.{$this->rightCol} >= {$queryAlias}SourceNode.{$this->rightCol}
-                AND {$queryAlias}Group.{$this->rootCol} = {$queryAlias}SourceNode.{$this->rootCol}
-                "
+            ->from(
+                '((' . $childrenQuery->getSQL() . ') UNION (' . $parentQuery->getSQL() . ') UNION (' . $rootQuery->getSQL() . ')) ',
+                "{$queryAlias}Group"
             )
             ->groupBy("{$queryAlias}Group.id");
 

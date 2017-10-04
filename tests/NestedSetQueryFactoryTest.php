@@ -105,10 +105,24 @@ class NestedSetQueryFactoryTest extends TestCase
         $this->assertEquals('Clothing', $rows[1]['name']);
     }
 
-    public function test_fetch_subtree_with_a_single_selected_node()
+    public function test_fetch_subtree_with_root_only_selected()
     {
-        \NestedSetBootstrap::printTree(1);
+        $qb = $this->queryFactory
+            ->createSubtreeThroughMultipleNodesQueryBuilder('tree', 't', 'root_id', [1])
+            ->select('*');
 
+        $this->assertSubTree(
+            [
+                'Clothing',
+                'Mens',
+                'Women',
+            ],
+            $qb->execute()->fetchAll()
+        );
+    }
+
+    public function test_fetch_subtree_with_a_single_selected_node_slacks()
+    {
         $qb = $this->queryFactory
             ->createSubtreeThroughMultipleNodesQueryBuilder('tree', 't', 'root_id', [5])
             ->select('*');
@@ -126,26 +140,8 @@ class NestedSetQueryFactoryTest extends TestCase
         );
     }
 
-    public function test_fetch_subtree_with_root_only_selected()
+    public function test_fetch_subtree_with_selected_nodes_mens_and_dresses()
     {
-
-        $qb = $this->queryFactory
-            ->createSubtreeThroughMultipleNodesQueryBuilder('tree', 't', 'root_id', [1])
-            ->select('*');
-
-        $this->assertSubTree(
-            [
-                'Clothing',
-                'Mens',
-                'Women',
-            ],
-            $qb->execute()->fetchAll()
-        );
-    }
-
-    public function test_fetch_subtree_with_selected_nodes()
-    {
-
         $qb = $this->queryFactory
             ->createSubtreeThroughMultipleNodesQueryBuilder('tree', 't', 'root_id', [2, 7])
             ->select('*');
@@ -164,7 +160,10 @@ class NestedSetQueryFactoryTest extends TestCase
             ],
             $qb->execute()->fetchAll()
         );
+    }
 
+    public function test_fetch_subtree_with_selected_nodes_mens_and_women()
+    {
         $qb = $this->queryFactory
             ->createSubtreeThroughMultipleNodesQueryBuilder('tree', 't', 'root_id', [3, 2])
             ->select('*');
@@ -183,7 +182,7 @@ class NestedSetQueryFactoryTest extends TestCase
         );
     }
 
-    public function test_fetch_subtree_with_selected_nodes_uses_the_depth_parameter()
+    public function test_fetch_subtree_with_selected_nodes_with_a_two_as_a_depth_parameter()
     {
         $qb = $this->queryFactory
             ->createSubtreeThroughMultipleNodesQueryBuilder('tree', 't', 'root_id', [2, 3], 2)
@@ -205,7 +204,10 @@ class NestedSetQueryFactoryTest extends TestCase
             ],
             $qb->execute()->fetchAll()
         );
+    }
 
+    public function test_fetch_subtree_with_selected_nodes_with_a_zero_depth_parameter()
+    {
         $qb = $this->queryFactory
             ->createSubtreeThroughMultipleNodesQueryBuilder('tree', 't', 'root_id', [3, 2], 0)
             ->select('*');
@@ -222,10 +224,10 @@ class NestedSetQueryFactoryTest extends TestCase
 
     private function assertSubTree(array $expectedNames, array $rows)
     {
-        $names = array_map(function(array $node) {
+        $names = array_map(function (array $node) {
             return $node['name'];
         }, $rows);
 
-        $this->assertEquals($expectedNames, $names, 'Got: ' . print_r($names, true));
+        $this->assertEquals($expectedNames, $names, 'Got: ' . print_r($names, true) . "\n and expected: " . print_r($expectedNames, true));
     }
 }
