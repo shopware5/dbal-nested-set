@@ -19,6 +19,7 @@ class NestedSetQueryFactoryTest extends TestCase
         $connection = \NestedSetBootstrap::getConnection();
         \NestedSetBootstrap::importTable();
         \NestedSetBootstrap::insertDemoTree();
+        \NestedSetBootstrap::insertDemoTree(2);
         $this->queryFactory = NestedSetFactory::createQueryFactory($connection, new NestedSetConfig('id', 'left', 'right', 'level'));
     }
 
@@ -99,12 +100,52 @@ class NestedSetQueryFactoryTest extends TestCase
 
         $rows = $qb->execute()->fetchAll();
 
-        $this->assertCount(1, $rows);
+        $this->assertCount(2, $rows);
         $this->assertEquals('Clothing', $rows[0]['name']);
+        $this->assertEquals('Clothing', $rows[1]['name']);
+    }
+
+    public function test_fetch_subtree_with_a_single_selected_node()
+    {
+        \NestedSetBootstrap::printTree(1);
+
+        $qb = $this->queryFactory
+            ->createSubtreeThroughMultipleNodesQueryBuilder('tree', 't', 'root_id', [5])
+            ->select('*');
+
+        $this->assertSubTree(
+            [
+                'Clothing',
+                'Mens',
+                'Suits',
+                'Slacks',
+                'Jackets',
+                'Women',
+            ],
+            $qb->execute()->fetchAll()
+        );
+    }
+
+    public function test_fetch_subtree_with_root_only_selected()
+    {
+
+        $qb = $this->queryFactory
+            ->createSubtreeThroughMultipleNodesQueryBuilder('tree', 't', 'root_id', [1])
+            ->select('*');
+
+        $this->assertSubTree(
+            [
+                'Clothing',
+                'Mens',
+                'Women',
+            ],
+            $qb->execute()->fetchAll()
+        );
     }
 
     public function test_fetch_subtree_with_selected_nodes()
     {
+
         $qb = $this->queryFactory
             ->createSubtreeThroughMultipleNodesQueryBuilder('tree', 't', 'root_id', [2, 7])
             ->select('*');
@@ -181,10 +222,10 @@ class NestedSetQueryFactoryTest extends TestCase
 
     private function assertSubTree(array $expectedNames, array $rows)
     {
-        $this->assertCount(count($expectedNames), $rows, print_r($rows, true));
+        $names = array_map(function(array $node) {
+            return $node['name'];
+        }, $rows);
 
-        foreach ($expectedNames as $index => $name) {
-            $this->assertEquals($name, $rows[$index]['name']);
-        }
+        $this->assertEquals($expectedNames, $names, 'Got: ' . print_r($names, true));
     }
 }

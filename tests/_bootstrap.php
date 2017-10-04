@@ -109,7 +109,7 @@ class NestedSetBootstrap
 
         foreach ($data as list($id, $left, $right, $level, $name)) {
             self::getConnection()->insert('tree', [
-                '`id`' => $id,
+                '`id`' => $id + (20 * ($rootId - 1)),
                 '`left`' => $left,
                 '`right`' => $right,
                 '`level`' => $level,
