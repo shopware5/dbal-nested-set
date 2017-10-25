@@ -12,6 +12,9 @@ class NestedSetBootstrap
      */
     public static $connection;
 
+    /**
+     * @return Connection
+     */
     public static function getConnection(): Connection
     {
         if (self::$connection) {
