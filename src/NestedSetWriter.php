@@ -32,8 +32,12 @@ class NestedSetWriter
      * @param NestedSetArrayNodeInspector $inspector
      * @param NestedSetConfig $conventionsConfig
      */
-    public function __construct(Connection $connection, NestedSetReader $reader, NestedSetArrayNodeInspector $inspector, NestedSetConfig $conventionsConfig)
-    {
+    public function __construct(
+        Connection $connection,
+        NestedSetReader $reader,
+        NestedSetArrayNodeInspector $inspector,
+        NestedSetConfig $conventionsConfig
+    ) {
         $this->connection = $connection;
         $this->reader = $reader;
         $this->setUpWithConnection($conventionsConfig, $connection);
@@ -336,10 +340,10 @@ class NestedSetWriter
      * @param string $tableExpression
      * @param array $data
      * @param array $types
-     * @param $newNodeNestedSetData
+     * @param array $newNodeNestedSetData
      * @return int
      */
-    private function doInsert(string $tableExpression, array $data, array $types, $newNodeNestedSetData): int
+    private function doInsert(string $tableExpression, array $data, array $types, array $newNodeNestedSetData): int
     {
         $this->connection
             ->insert(
@@ -358,9 +362,9 @@ class NestedSetWriter
      * @param string $tableExpression
      * @param array $nodeData
      * @param int $destLeft destination left value
-     * @param $levelDiff
+     * @param int $levelDiff
      */
-    private function updateNodePosition(string $tableExpression, array $nodeData, $destLeft, $levelDiff)
+    private function updateNodePosition(string $tableExpression, array $nodeData, int $destLeft, int $levelDiff)
     {
         $left = $nodeData['left'];
         $right = $nodeData['right'];

@@ -311,17 +311,4 @@ class NestedSetWriterTest extends TestCase
         self::assertSame($level, $nodeData['level'], 'level value');
         self::assertSame($rootId, $nodeData['root_id'], 'root id');
     }
-
-    /**
-     * @param int $rootId
-     */
-    private function printAsserts($rootId = 100)
-    {
-        $tree = \NestedSetBootstrap::getConnection()->fetchAll('SELECT * FROM tree WHERE root_id = ' . $rootId . ' ORDER BY `left`;');
-
-        echo "\n";
-        foreach ($tree as $node) {
-            echo '$this->assertNode(' . $node['id'] . ', ' . $node['left'] . ', ' . $node['right'] . ', ' . $node['level'] . ', 100);' . "\n";
-        }
-    }
 }
