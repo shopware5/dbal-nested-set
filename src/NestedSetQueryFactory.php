@@ -81,23 +81,22 @@ class NestedSetQueryFactory
     }
 
     /**
-     * Get a particular node and all his children
+     * Select a parent and all it's children
      *
      * @param string $tableExpression
      * @param string $queryAlias
      * @param string $rootColumnName
      * @param int $parentId
-     * @param int $nodeId
      * @return QueryBuilder
      */
-    public function createNodeAndChildrenQueryBuilder(
+    public function createParentAndChildrenQueryBuilder(
         string $tableExpression,
         string $queryAlias,
         string $rootColumnName,
-        int $nodeId
+        int $parentId
     ): QueryBuilder {
         $this->setRootColName($rootColumnName, $this->connection);
-        $nodeData = $this->reader->fetchNodeData($tableExpression, $rootColumnName, $nodeId);
+        $nodeData = $this->reader->fetchNodeData($tableExpression, $rootColumnName, $parentId);
 
         return $this->connection->createQueryBuilder()
             ->from($this->connection->quoteIdentifier($tableExpression), $queryAlias)

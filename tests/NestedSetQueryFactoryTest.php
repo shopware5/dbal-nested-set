@@ -41,7 +41,7 @@ class NestedSetQueryFactoryTest extends TestCase
 
     public function test_fetch_all_children_and_node()
     {
-        $qb = $this->queryFactory->createNodeAndChildrenQueryBuilder('tree', 't', 'root_id', 24)
+        $qb = $this->queryFactory->createParentAndChildrenQueryBuilder('tree', 't', 'root_id', 24)
             ->select('*');
 
         $sql = $qb->getSQL();
