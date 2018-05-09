@@ -39,6 +39,22 @@ class NestedSetQueryFactoryTest extends TestCase
         $this->assertEquals('Suits', $rows[0]['name']);
     }
 
+    public function test_fetch_all_children_and_node()
+    {
+        $qb = $this->queryFactory->createParentAndChildrenQueryBuilder('tree', 't', 'root_id', 24)
+            ->select('*');
+
+        $sql = $qb->getSQL();
+
+        $this->assertContains('tree', $sql);
+        $this->assertContains('t.', $sql);
+
+        $rows = $qb->execute()->fetchAll();
+
+        $this->assertCount(3, $rows);
+        $this->assertEquals('Suits', $rows[0]['name']);
+    }
+
     public function test_fetch_subtree()
     {
         $qb = $this->queryFactory->createSubtreeQueryBuilder('tree', 't', 'root_id', 2)

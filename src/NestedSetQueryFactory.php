@@ -81,6 +81,37 @@ class NestedSetQueryFactory
     }
 
     /**
+     * Select a parent and all it's children
+     *
+     * @param string $tableExpression
+     * @param string $queryAlias
+     * @param string $rootColumnName
+     * @param int $parentId
+     * @return QueryBuilder
+     */
+    public function createParentAndChildrenQueryBuilder(
+        string $tableExpression,
+        string $queryAlias,
+        string $rootColumnName,
+        int $parentId
+    ): QueryBuilder {
+        $this->setRootColName($rootColumnName, $this->connection);
+        $nodeData = $this->reader->fetchNodeData($tableExpression, $rootColumnName, $parentId);
+
+        return $this->connection->createQueryBuilder()
+            ->from($this->connection->quoteIdentifier($tableExpression), $queryAlias)
+            ->where("{$queryAlias}.{$this->levelCol} >= :{$queryAlias}Level")
+            ->andWhere("{$queryAlias}.{$this->leftCol} >= :{$queryAlias}Left")
+            ->andWhere("{$queryAlias}.{$this->leftCol} <= :{$queryAlias}Right")
+            ->andWhere("{$queryAlias}.{$this->rootCol} = :{$queryAlias}Root")
+            ->orderBy("{$queryAlias}.{$this->leftCol}")
+            ->setParameter("{$queryAlias}Level", $nodeData['level'])
+            ->setParameter("{$queryAlias}Left", $nodeData['left'])
+            ->setParameter("{$queryAlias}Right", $nodeData['right'])
+            ->setParameter("{$queryAlias}Root", $nodeData['root_id']);
+    }
+
+    /**
      * Get the subtree relative to a single node
      *
      * @param string $tableExpression
