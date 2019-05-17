@@ -16,22 +16,12 @@ class NestedSetTableFactory
      */
     private $connection;
 
-    /**
-     * @param Connection $connection
-     * @param NestedSetConfig $config
-     */
     public function __construct(Connection $connection, NestedSetConfig $config)
     {
         $this->connection = $connection;
         $this->setUpWithConnection($config, $connection);
     }
 
-    /**
-     * @param Schema $schema
-     * @param string $tableName
-     * @param string $rootColumnName
-     * @return Table
-     */
     public function createTable(Schema $schema, string $tableName, string $rootColumnName): Table
     {
         $this->setRootColName($rootColumnName, $this->connection);

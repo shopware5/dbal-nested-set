@@ -24,12 +24,6 @@ class NestedSetConfig
      */
     private $primaryKeyColumnName;
 
-    /**
-     * @param string $primaryKeyColumnName
-     * @param string $leftColumnName
-     * @param string $rightColumnName
-     * @param string $levelColumnName
-     */
     public function __construct(
         string $primaryKeyColumnName,
         string $leftColumnName,
@@ -42,33 +36,21 @@ class NestedSetConfig
         $this->levelColumnName = $levelColumnName;
     }
 
-    /**
-     * @return string
-     */
     public function getPrimaryKeyColumnName(): string
     {
         return $this->primaryKeyColumnName;
     }
 
-    /**
-     * @return string
-     */
     public function getLeftColumnName(): string
     {
         return $this->leftColumnName;
     }
 
-    /**
-     * @return string
-     */
     public function getRightColumnName(): string
     {
         return $this->rightColumnName;
     }
 
-    /**
-     * @return string
-     */
     public function getLevelColumnName(): string
     {
         return $this->levelColumnName;

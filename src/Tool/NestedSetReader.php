@@ -15,10 +15,6 @@ class NestedSetReader
      */
     private $connection;
 
-    /**
-     * @param Connection $connection
-     * @param NestedSetConfig $conventionsConfig
-     */
     public function __construct(Connection $connection, NestedSetConfig $conventionsConfig)
     {
         $this->connection = $connection;
@@ -26,11 +22,7 @@ class NestedSetReader
     }
 
     /**
-     * @param string $tableExpression
-     * @param string $rootColumnName
-     * @param int $nodeId
      * @throws NestedSetExceptionNodeNotFound
-     * @return array
      */
     public function fetchNodeData(string $tableExpression, string $rootColumnName, int $nodeId): array
     {

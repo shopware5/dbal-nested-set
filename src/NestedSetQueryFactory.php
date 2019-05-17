@@ -21,11 +21,6 @@ class NestedSetQueryFactory
      */
     private $reader;
 
-    /**
-     * @param Connection $connection
-     * @param NestedSetConfig $conventionsConfig
-     * @param NestedSetReader $reader
-     */
     public function __construct(Connection $connection, NestedSetReader $reader, NestedSetConfig $conventionsConfig)
     {
         $this->connection = $connection;
@@ -35,10 +30,6 @@ class NestedSetQueryFactory
 
     /**
      * Get all roots from a multi root nested set table
-     *
-     * @param string $tableExpression
-     * @param string $queryAlias
-     * @return QueryBuilder
      */
     public function createFetchRootsQueryBuilder(string $tableExpression, string $queryAlias): QueryBuilder
     {
@@ -51,12 +42,6 @@ class NestedSetQueryFactory
 
     /**
      * Get all direct children of a particular node
-     *
-     * @param string $tableExpression
-     * @param string $queryAlias
-     * @param string $rootColumnName
-     * @param int $parentId
-     * @return QueryBuilder
      */
     public function createChildrenQueryBuilder(
         string $tableExpression,
@@ -82,12 +67,6 @@ class NestedSetQueryFactory
 
     /**
      * Select a parent and all it's children
-     *
-     * @param string $tableExpression
-     * @param string $queryAlias
-     * @param string $rootColumnName
-     * @param int $parentId
-     * @return QueryBuilder
      */
     public function createParentAndChildrenQueryBuilder(
         string $tableExpression,
@@ -113,12 +92,6 @@ class NestedSetQueryFactory
 
     /**
      * Get the subtree relative to a single node
-     *
-     * @param string $tableExpression
-     * @param string $queryAlias
-     * @param string $rootColumnName
-     * @param int $parentId
-     * @return QueryBuilder
      */
     public function createSubtreeQueryBuilder(
         string $tableExpression,
@@ -142,12 +115,6 @@ class NestedSetQueryFactory
 
     /**
      * Get the parents of a particular node
-     *
-     * @param string $tableExpression
-     * @param string $queryAlias
-     * @param string $rootColumnName
-     * @param int $nodeId
-     * @return QueryBuilder
      */
     public function createParentsQueryBuilder(
         string $tableExpression,
@@ -172,13 +139,7 @@ class NestedSetQueryFactory
     /**
      * Get the whole subtree relative to a collection of nodes ids
      *
-     * @param string $tableExpression
-     * @param string $queryAlias
-     * @param string $rootColumnName
      * @param int[] $nodeIds
-     * @param int $minChildLevel
-     * @param int $pkType
-     * @return QueryBuilder
      */
     public function createSubtreeThroughMultipleNodesQueryBuilder(
         string $tableExpression,
@@ -216,11 +177,6 @@ class NestedSetQueryFactory
             ->setParameter("{$queryAlias}maxChildLevel", $minChildLevel);
     }
 
-    /**
-     * @param string $tableExpression
-     * @param string $queryAlias
-     * @return QueryBuilder
-     */
     private function createDirectNodeSubselectQuery(string $tableExpression, string $queryAlias): QueryBuilder
     {
         return $this->connection->createQueryBuilder()
@@ -235,12 +191,6 @@ class NestedSetQueryFactory
             ->andWhere("{$queryAlias}directNode.{$this->pkCol} IN (:{$queryAlias}nodeIds)");
     }
 
-    /**
-     * @param string $tableExpression
-     * @param string $queryAlias
-     * @param QueryBuilder $directNodeSubSelect
-     * @return QueryBuilder
-     */
     private function createParentAndSiblingChainSubselectQuery(
         string $tableExpression,
         string $queryAlias,
@@ -278,12 +228,6 @@ class NestedSetQueryFactory
             );
     }
 
-    /**
-     * @param string $tableExpression
-     * @param string $queryAlias
-     * @param QueryBuilder $directNodeSubSelect
-     * @return QueryBuilder
-     */
     private function createChildrenSubselectQuery(
         string $tableExpression,
         string $queryAlias,
@@ -311,12 +255,6 @@ class NestedSetQueryFactory
             );
     }
 
-    /**
-     * @param string $tableExpression
-     * @param string $queryAlias
-     * @param QueryBuilder $directNodeSubSelect
-     * @return QueryBuilder
-     */
     private function createRootSubselectQuery(
         string $tableExpression,
         string $queryAlias,
@@ -342,13 +280,6 @@ class NestedSetQueryFactory
             );
     }
 
-    /**
-     * @param string $queryAlias
-     * @param QueryBuilder $childrenQuery
-     * @param QueryBuilder $parentQuery
-     * @param QueryBuilder $rootQuery
-     * @return QueryBuilder
-     */
     private function createPrimaryKeySubselectQuery(
         string $queryAlias,
         QueryBuilder $childrenQuery,

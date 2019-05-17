@@ -26,12 +26,6 @@ class NestedSetWriter
      */
     private $inspector;
 
-    /**
-     * @param Connection $connection
-     * @param NestedSetReader $reader
-     * @param NestedSetArrayNodeInspector $inspector
-     * @param NestedSetConfig $conventionsConfig
-     */
     public function __construct(
         Connection $connection,
         NestedSetReader $reader,
@@ -44,16 +38,13 @@ class NestedSetWriter
         $this->inspector = $inspector;
     }
 
-    /**
-     * @param string $tableExpression
-     * @param string $rootColumnName
-     * @param int $rootId
-     * @param array $data
-     * @param array $types
-     * @return int
-     */
-    public function insertRoot(string $tableExpression, string $rootColumnName, int $rootId, array $data, array $types = []): int
-    {
+    public function insertRoot(
+        string $tableExpression,
+        string $rootColumnName,
+        int $rootId,
+        array $data,
+        array $types = []
+    ): int {
         $this->setRootColName($rootColumnName, $this->connection);
 
         $nestedSetRootData = $this
@@ -76,15 +67,15 @@ class NestedSetWriter
     /**
      * @see Connection::insert()
      *
-     * @param string $tableExpression
-     * @param string $rootColumnName
-     * @param int $parentId
-     * @param array $data
-     * @param array $types
      * @return int id of the new node
      */
-    public function insertAsFirstChild(string $tableExpression, string $rootColumnName, int $parentId, array $data, array $types = []): int
-    {
+    public function insertAsFirstChild(
+        string $tableExpression,
+        string $rootColumnName,
+        int $parentId,
+        array $data,
+        array $types = []
+    ): int {
         $this->setRootColName($rootColumnName, $this->connection);
         $parentData = $this->reader->fetchNodeData($tableExpression, $rootColumnName, $parentId);
 
@@ -106,15 +97,15 @@ class NestedSetWriter
     /**
      * @see Connection::insert()
      *
-     * @param string $tableExpression
-     * @param string $rootColumnName
-     * @param int $parentId
-     * @param array $data
-     * @param array $types
      * @return int id of the new node
      */
-    public function insertAsLastChild(string $tableExpression, string $rootColumnName, int $parentId, array $data, array $types = []): int
-    {
+    public function insertAsLastChild(
+        string $tableExpression,
+        string $rootColumnName,
+        int $parentId,
+        array $data,
+        array $types = []
+    ): int {
         $this->setRootColName($rootColumnName, $this->connection);
         $parentData = $this->reader->fetchNodeData($tableExpression, $rootColumnName, $parentId);
 
@@ -133,19 +124,16 @@ class NestedSetWriter
             ->doInsert($tableExpression, $data, $types, $newNodeNestedSetData);
     }
 
-    /**
-     * @param string $tableExpression
-     * @param string $rootColumnName
-     * @param int $siblingId
-     * @param array $data
-     * @param array $types
-     * @return int
-     */
-    public function insertAsPrevSibling(string $tableExpression, string $rootColumnName, int $siblingId, array $data, array $types = []): int
-    {
+    public function insertAsPrevSibling(
+        string $tableExpression,
+        string $rootColumnName,
+        int $siblingId,
+        array $data,
+        array $types = []
+    ): int {
         $this->setRootColName($rootColumnName, $this->connection);
         $childData = $this->reader->fetchNodeData($tableExpression, $rootColumnName, $siblingId);
-        $newLeft  = $childData['left'];
+        $newLeft = $childData['left'];
         $newRight = $childData['left'] + 1;
 
         $this->applyDeltaToSubsequendNodes($tableExpression, $childData['root_id'], $newLeft, 2);
@@ -161,19 +149,16 @@ class NestedSetWriter
             ->doInsert($tableExpression, $data, $types, $newNodeNestedSetData);
     }
 
-    /**
-     * @param string $tableExpression
-     * @param string $rootColumnName
-     * @param int $siblingId
-     * @param array $data
-     * @param array $types
-     * @return int
-     */
-    public function insertAsNextSibling(string $tableExpression, string $rootColumnName, int $siblingId, array $data, array $types = []): int
-    {
+    public function insertAsNextSibling(
+        string $tableExpression,
+        string $rootColumnName,
+        int $siblingId,
+        array $data,
+        array $types = []
+    ): int {
         $this->setRootColName($rootColumnName, $this->connection);
         $childData = $this->reader->fetchNodeData($tableExpression, $rootColumnName, $siblingId);
-        $newLeft  = $childData['right'] + 1;
+        $newLeft = $childData['right'] + 1;
         $newRight = $childData['right'] + 2;
 
         $this->applyDeltaToSubsequendNodes($tableExpression, $childData['root_id'], $newLeft, 2);
@@ -190,10 +175,6 @@ class NestedSetWriter
     }
 
     /**
-     * @param string $tableExpression
-     * @param string $rootColumnName
-     * @param int $parentId
-     * @param int $childId
      * @throws NestedSetExceptionInvalidNodeOperation
      */
     public function moveAsLastChild(string $tableExpression, string $rootColumnName, int $parentId, int $childId)
@@ -203,12 +184,10 @@ class NestedSetWriter
         $parent = $this->reader->fetchNodeData($tableExpression, $rootColumnName, $parentId);
         $child = $this->reader->fetchNodeData($tableExpression, $rootColumnName, $childId);
 
-
-        if (
-            $this->inspector->isEqual($parent, $child) ||
-            $this->inspector->isAncestor($child, $parent)
-        ) {
-            throw new NestedSetExceptionInvalidNodeOperation('Cannot move node as last child of itself or into a descendant');
+        if ($this->inspector->isEqual($parent, $child) || $this->inspector->isAncestor($child, $parent)) {
+            throw new NestedSetExceptionInvalidNodeOperation(
+                'Cannot move node as last child of itself or into a descendant'
+            );
         }
 
         $level = ($parent['level'] + 1);
@@ -218,10 +197,6 @@ class NestedSetWriter
     }
 
     /**
-     * @param string $tableExpression
-     * @param string $rootColumnName
-     * @param int $parentId
-     * @param int $childId
      * @throws NestedSetExceptionInvalidNodeOperation
      */
     public function moveAsFirstChild(string $tableExpression, string $rootColumnName, int $parentId, int $childId)
@@ -231,11 +206,10 @@ class NestedSetWriter
         $parent = $this->reader->fetchNodeData($tableExpression, $rootColumnName, $parentId);
         $child = $this->reader->fetchNodeData($tableExpression, $rootColumnName, $childId);
 
-        if (
-            $this->inspector->isEqual($parent, $child) ||
-            $this->inspector->isAncestor($child, $parent)
-        ) {
-            throw new NestedSetExceptionInvalidNodeOperation('Cannot move node as first child of itself or into a descendant');
+        if ($this->inspector->isEqual($parent, $child) || $this->inspector->isAncestor($child, $parent)) {
+            throw new NestedSetExceptionInvalidNodeOperation(
+                'Cannot move node as first child of itself or into a descendant'
+            );
         }
 
         $level = ($parent['level'] + 1);
@@ -245,10 +219,6 @@ class NestedSetWriter
     }
 
     /**
-     * @param string $tableExpression
-     * @param string $rootColumnName
-     * @param int $siblingId
-     * @param int $childId
      * @throws NestedSetExceptionInvalidNodeOperation
      */
     public function moveAsPrevSibling(string $tableExpression, string $rootColumnName, int $siblingId, int $childId)
@@ -258,11 +228,10 @@ class NestedSetWriter
         $sibling = $this->reader->fetchNodeData($tableExpression, $rootColumnName, $siblingId);
         $child = $this->reader->fetchNodeData($tableExpression, $rootColumnName, $childId);
 
-        if (
-            $this->inspector->isEqual($sibling, $child) ||
-            $this->inspector->isAncestor($child, $sibling)
-        ) {
-            throw new NestedSetExceptionInvalidNodeOperation('Cannot move node as prev sibling of itself or into a descendant');
+        if ($this->inspector->isEqual($sibling, $child) || $this->inspector->isAncestor($child, $sibling)) {
+            throw new NestedSetExceptionInvalidNodeOperation(
+                'Cannot move node as prev sibling of itself or into a descendant'
+            );
         }
 
         $level = $sibling['level'];
@@ -272,10 +241,6 @@ class NestedSetWriter
     }
 
     /**
-     * @param string $tableExpression
-     * @param string $rootColumnName
-     * @param int $siblingId
-     * @param int $childId
      * @throws NestedSetExceptionInvalidNodeOperation
      */
     public function moveAsNextSibling(string $tableExpression, string $rootColumnName, int $siblingId, int $childId)
@@ -285,11 +250,10 @@ class NestedSetWriter
         $sibling = $this->reader->fetchNodeData($tableExpression, $rootColumnName, $siblingId);
         $child = $this->reader->fetchNodeData($tableExpression, $rootColumnName, $childId);
 
-        if (
-            $this->inspector->isEqual($sibling, $child) ||
-            $this->inspector->isAncestor($child, $sibling)
-        ) {
-            throw new NestedSetExceptionInvalidNodeOperation('Cannot move node as next sibling of itself or into a descendant');
+        if ($this->inspector->isEqual($sibling, $child) || $this->inspector->isAncestor($child, $sibling)) {
+            throw new NestedSetExceptionInvalidNodeOperation(
+                'Cannot move node as next sibling of itself or into a descendant'
+            );
         }
 
         $level = $sibling['level'];
@@ -298,11 +262,6 @@ class NestedSetWriter
         $this->updateNodePosition($tableExpression, $child, $sibling['right'] + 1, $level - $child['level']);
     }
 
-    /**
-     * @param string $tableExpression
-     * @param string $rootColumnName
-     * @param int $nodeId
-     */
     public function removeNode(string $tableExpression, string $rootColumnName, int $nodeId)
     {
         $this->setRootColName($rootColumnName, $this->connection);
@@ -310,8 +269,14 @@ class NestedSetWriter
 
         $this->connection
             ->executeUpdate(
-                "DELETE FROM {$tableExpression} WHERE {$this->leftCol} >= :left AND {$this->rightCol} <= :right",
-                ['left' => $node['left'], 'right' => $node['right']]
+                "DELETE FROM {$tableExpression} 
+                 WHERE {$this->leftCol} >= :left
+                   AND {$this->rightCol} <= :right                   
+                   ",
+                [
+                    'left' => $node['left'],
+                    'right' => $node['right'],
+                ]
             );
 
         $first = $node['right'] + 1;
@@ -319,13 +284,6 @@ class NestedSetWriter
         $this->applyDeltaToSubsequendNodes($tableExpression, $node['root_id'], $first, $delta);
     }
 
-    /**
-     * @param int $leftValue
-     * @param int $rightValue
-     * @param int $levelValue
-     * @param int $rootId
-     * @return array
-     */
     private function createNestedSetData(int $leftValue, int $rightValue, int $levelValue, int $rootId): array
     {
         return [
@@ -336,13 +294,6 @@ class NestedSetWriter
         ];
     }
 
-    /**
-     * @param string $tableExpression
-     * @param array $data
-     * @param array $types
-     * @param array $newNodeNestedSetData
-     * @return int
-     */
     private function doInsert(string $tableExpression, array $data, array $types, array $newNodeNestedSetData): int
     {
         $this->connection
@@ -359,10 +310,7 @@ class NestedSetWriter
     /**
      * move node's and its children to location $destLeft and updates rest of tree
      *
-     * @param string $tableExpression
-     * @param array $nodeData
      * @param int $destLeft destination left value
-     * @param int $levelDiff
      */
     private function updateNodePosition(string $tableExpression, array $nodeData, int $destLeft, int $levelDiff)
     {
@@ -386,7 +334,7 @@ class NestedSetWriter
             ->andWhere("{$this->rootCol} = :rootValue")
             ->setParameters([
                 'level' => $levelDiff,
-                'left' =>$left,
+                'left' => $left,
                 'right' => $right,
                 'rootValue' => $nodeData['root_id'],
             ])
@@ -401,7 +349,6 @@ class NestedSetWriter
 
     /**
      * adds '$delta' to all Left and Right values that are >= '$first'. '$delta' can also be negative.
-     *
      *
      * @param string $tableExpression
      * @param int $rootValue
@@ -439,8 +386,6 @@ class NestedSetWriter
      * adds '$delta' to all Left and Right values that are >= '$first' and <= '$last'.
      * '$delta' can also be negative.
      *
-     * @param string $tableExpression
-     * @param int $rootValue
      * @param int $first First node to be shifted (L value)
      * @param int $last Last node to be shifted (L value)
      * @param int $delta Value to be shifted by, can be negative
@@ -474,11 +419,6 @@ class NestedSetWriter
             ->execute();
     }
 
-    /**
-     * @param string $tableExpression
-     * @param int $id
-     * @param int $level
-     */
     private function updateLevel(string $tableExpression, int $id, int $level)
     {
         $this->connection->update(
