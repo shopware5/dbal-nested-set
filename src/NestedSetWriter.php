@@ -352,8 +352,6 @@ class NestedSetWriter
     /**
      * adds '$delta' to all Left and Right values that are >= '$first'. '$delta' can also be negative.
      *
-     * @param string $tableExpression
-     * @param int $rootValue
      * @param int $first First node to be shifted
      * @param int $delta Value to be shifted by, can be negative
      */
