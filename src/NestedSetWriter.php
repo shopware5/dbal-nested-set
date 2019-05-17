@@ -272,10 +272,12 @@ class NestedSetWriter
                 "DELETE FROM {$tableExpression} 
                  WHERE {$this->leftCol} >= :left
                    AND {$this->rightCol} <= :right                   
-                   ",
+                   AND {$this->rootCol} = :rootId
+                ",
                 [
                     'left' => $node['left'],
                     'right' => $node['right'],
+                    'rootId' => $node['root_id'],
                 ]
             );
 
