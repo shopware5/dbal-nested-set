@@ -12,9 +12,6 @@ class NestedSetBootstrap
      */
     public static $connection;
 
-    /**
-     * @return Connection
-     */
     public static function getConnection(): Connection
     {
         if (self::$connection) {
@@ -33,12 +30,12 @@ class NestedSetBootstrap
         return self::$connection = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
     }
 
-    /**
-     * @param int $rootId
-     */
     public static function validateTree(int $rootId)
     {
-        $tree = self::getConnection()->fetchAll('SELECT * FROM tree WHERE root_id = :rootId ORDER BY `left`;', ['rootId' => $rootId]);
+        $tree = self::getConnection()->fetchAll(
+            'SELECT * FROM tree WHERE root_id = :rootId ORDER BY `left`;',
+            ['rootId' => $rootId]
+        );
 
         foreach ($tree as $node) {
             $leftEven = (($node['left'] % 2) === 0);
@@ -47,9 +44,6 @@ class NestedSetBootstrap
         }
     }
 
-    /**
-     * @param int $rootId
-     */
     public static function printTree(int $rootId)
     {
         $tree = self::getConnection()->fetchAll('SELECT * FROM tree WHERE root_id = :rootId ORDER BY `left`;', ['rootId' => $rootId]);
@@ -91,9 +85,6 @@ class NestedSetBootstrap
         self::getConnection()->exec($addSql[0]);
     }
 
-    /**
-     * @param int $rootId
-     */
     public static function insertDemoTree(int $rootId = 1)
     {
         $data = [
@@ -122,10 +113,6 @@ class NestedSetBootstrap
         }
     }
 
-    /**
-     * @param string $name
-     * @param string $defaultValue
-     */
     public static function getEnvOrSet(string $name, string $defaultValue)
     {
         $value = getenv($name);

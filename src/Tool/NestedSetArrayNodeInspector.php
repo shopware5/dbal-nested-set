@@ -12,9 +12,6 @@ class NestedSetArrayNodeInspector
      */
     private $inspector;
 
-    /**
-     * @param NestedSetNodeInspector $inspector
-     */
     public function __construct(NestedSetNodeInspector $inspector)
     {
         $this->inspector = $inspector;
@@ -22,9 +19,6 @@ class NestedSetArrayNodeInspector
 
     /**
      * determines if node is leaf
-     *
-     * @param array $node
-     * @return bool
      */
     public function isLeaf(array $node): bool
     {
@@ -33,9 +27,6 @@ class NestedSetArrayNodeInspector
 
     /**
      * determines if node is root
-     *
-     * @param array $node
-     * @return bool
      */
     public function isRoot(array $node): bool
     {
@@ -44,10 +35,6 @@ class NestedSetArrayNodeInspector
 
     /**
      * determines if node is root
-     *
-     * @param array $node1
-     * @param array $node2
-     * @return bool
      */
     public function isEqual(array $node1, array $node2): bool
     {
@@ -59,10 +46,6 @@ class NestedSetArrayNodeInspector
 
     /**
      * determines if node is child of subject node
-     *
-     * @param array $node1
-     * @param array $node2
-     * @return bool
      */
     public function isDescendant(array $node1, array $node2): bool
     {
@@ -74,10 +57,6 @@ class NestedSetArrayNodeInspector
 
     /**
      * determines if node is child of or sibling to subject node
-     *
-     * @param array $node1
-     * @param array $node2
-     * @return bool
      */
     public function isDescendantOrEqual(array $node1, array $node2): bool
     {
@@ -89,10 +68,6 @@ class NestedSetArrayNodeInspector
 
     /**
      * determines if node is ancestor of subject node
-     *
-     * @param array $node1
-     * @param array $node2
-     * @return bool
      */
     public function isAncestor(array $node1, array $node2): bool
     {
