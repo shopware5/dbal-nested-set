@@ -281,6 +281,7 @@ class NestedSetWriterTest extends TestCase
     public function test_delete()
     {
         \NestedSetBootstrap::insertDemoTree();
+        \NestedSetBootstrap::insertDemoTree(2);
 
         $this->writer->removeNode('tree', 'root_id', 2);
 
@@ -293,6 +294,9 @@ class NestedSetWriterTest extends TestCase
         $this->assertNode(11, 6, 7, 3, 1);
         $this->assertNode(8, 9, 10, 2, 1);
         $this->assertNode(9, 11, 12, 2, 1);
+
+        // important check if removeNode didn't delete entries from root_id 2
+        $this->assertNode(22, 2, 9, 1, 2);
     }
 
     private function assertNode(int $nodeId, int $leftValue, int $rightValue, int $level, int $rootId)

@@ -32,7 +32,10 @@ class NestedSetBootstrap
 
     public static function validateTree(int $rootId)
     {
-        $tree = self::getConnection()->fetchAll('SELECT * FROM tree WHERE root_id = :rootId ORDER BY `left`;', ['rootId' => $rootId]);
+        $tree = self::getConnection()->fetchAll(
+            'SELECT * FROM tree WHERE root_id = :rootId ORDER BY `left`;',
+            ['rootId' => $rootId]
+        );
 
         foreach ($tree as $node) {
             $leftEven = (($node['left'] % 2) === 0);
