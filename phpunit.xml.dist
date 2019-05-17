@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit
-        bootstrap="./tests/_bootstrap.php"
+        bootstrap="./tests/NestedSetBootstrap.php"
         backupGlobals="false"
         backupStaticAttributes="false"
         colors="true"
         convertErrorsToExceptions="true"
         convertNoticesToExceptions="true"
         convertWarningsToExceptions="true"
-        strict="true"
 >
     <testsuite name="All">
         <directory>tests/</directory>
