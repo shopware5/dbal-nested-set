@@ -32,7 +32,7 @@ trait NestedSetConfigAware
      */
     private $rootCol;
 
-    private function setUpWithConnection(NestedSetConfig $conventionsConfig, Connection $connection)
+    private function setUpWithConnection(NestedSetConfig $conventionsConfig, Connection $connection): void
     {
         $this->pkCol = $connection->quoteIdentifier($conventionsConfig->getPrimaryKeyColumnName());
         $this->leftCol = $connection->quoteIdentifier($conventionsConfig->getLeftColumnName());
@@ -40,7 +40,7 @@ trait NestedSetConfigAware
         $this->levelCol = $connection->quoteIdentifier($conventionsConfig->getLevelColumnName());
     }
 
-    private function setRootColName(string $rootColumnName, Connection $connection)
+    private function setRootColName(string $rootColumnName, Connection $connection): void
     {
         $this->rootCol = $connection->quoteIdentifier($rootColumnName);
     }

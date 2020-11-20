@@ -135,6 +135,7 @@ If you want to develop locally you may have to configure the database access thr
 export DB_USER='foo'
 export DB_PASSWORD='bar'
 export DB_HOST='baz'
+export DB_NAME='dbal_nested_set'
 
 bin/phpunit
 ```

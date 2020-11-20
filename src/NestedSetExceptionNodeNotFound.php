@@ -2,6 +2,8 @@
 
 namespace Shopware\DbalNestedSet;
 
-class NestedSetExceptionNodeNotFound extends \InvalidArgumentException
+use InvalidArgumentException;
+
+class NestedSetExceptionNodeNotFound extends InvalidArgumentException
 {
 }
