@@ -1,9 +1,5 @@
 <?php declare(strict_types=1);
 $finder = PhpCsFixer\Finder::create()
-    ->ignoreUnreadableDirs()
-    ->exclude([
-        __DIR__ . '/tests/Integration/ScriptRuntime/_non_writable',
-    ])
     ->in(__DIR__ . '/src')
     ->in(__DIR__ . '/tests')
     ->append([__FILE__]);

@@ -34,4 +34,4 @@ before_script:
 
 script:
     - bin/phpunit
-    - ./php-cs-fixer fix --dry-run
+    - bin/php-cs-fixer fix --dry-run
