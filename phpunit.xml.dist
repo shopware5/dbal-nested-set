@@ -7,11 +7,12 @@
         convertErrorsToExceptions="true"
         convertNoticesToExceptions="true"
         convertWarningsToExceptions="true"
-        strict="true"
 >
-    <testsuite name="All">
-        <directory>tests/</directory>
-    </testsuite>
+    <testsuites>
+        <testsuite name="All">
+            <directory>tests/</directory>
+        </testsuite>
+    </testsuites>
 
     <filter>
         <whitelist>
