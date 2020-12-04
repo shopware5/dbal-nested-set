@@ -1,13 +1,11 @@
-<?php
-
+<?php declare(strict_types=1);
 $finder = PhpCsFixer\Finder::create()
     ->in(__DIR__ . '/src')
     ->in(__DIR__ . '/tests')
-;
+    ->append([__FILE__]);
 
 return PhpCsFixer\Config::create()
     ->setRules([
-        '@PSR2' => true,
         '@Symfony' => true,
 
         // Fix declare style
@@ -20,16 +18,17 @@ return PhpCsFixer\Config::create()
         'phpdoc_summary' => false,
         'increment_style' => false,
         'php_unit_fqcn_annotation' => false,
+        'single_line_throw' => false,
 
         'array_syntax' => [
-            'syntax' => 'short'
+            'syntax' => 'short',
         ],
         'class_definition' => [
-            'single_line' => true
+            'single_line' => true,
         ],
         'comment_to_phpdoc' => true,
         'concat_space' => [
-            'spacing' => 'one'
+            'spacing' => 'one',
         ],
         'declare_strict_types' => true,
         'dir_constant' => true,
@@ -41,18 +40,53 @@ return PhpCsFixer\Config::create()
         'multiline_whitespace_before_semicolons' => true,
         'mb_str_functions' => true,
         'ordered_class_elements' => false,
-        'ordered_imports' => true,
+        'ordered_imports' => [
+            'imports_order' => [
+                'class',
+                'function',
+                'const',
+            ],
+        ],
+        'native_function_invocation' => [
+            'exclude' => [
+                'call_user_func_array',
+            ],
+        ],
+        'global_namespace_import' => [
+            'import_classes' => true,
+            'import_constants' => false,
+            'import_functions' => true,
+        ],
         'php_unit_ordered_covers' => true,
         'php_unit_namespaced' => true,
         'php_unit_construct' => true,
         'phpdoc_add_missing_param_annotation' => [
-            'only_untyped' => true
+            'only_untyped' => true,
         ],
         'phpdoc_order' => true,
         'phpdoc_var_annotation_correct_order' => true,
         'strict_comparison' => true,
         'strict_param' => true,
+        'general_phpdoc_annotation_remove' => [
+            'annotations' => ['inheritdoc'],
+        ],
+        'class_attributes_separation' => [
+            'elements' => [
+                'method',
+                'property',
+            ],
+        ],
+        'void_return' => true,
+        'php_unit_test_case_static_method_calls' => [
+            'call_type' => 'self',
+        ],
+        'yoda_style' => [
+            'equal' => false,
+            'identical' => false,
+            'less_and_greater' => false,
+        ],
+        'nullable_type_declaration_for_default_null_value' => true,
     ])
     ->setRiskyAllowed(true)
-    ->setUsingCache(false)
+    ->setUsingCache(true)
     ->setFinder($finder);

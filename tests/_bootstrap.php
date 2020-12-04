@@ -20,7 +20,7 @@ class NestedSetBootstrap
 
         $config = new Configuration();
         $connectionParams = [
-            'dbname' => 'nested_set',
+            'dbname' => DB_NAME,
             'user' => DB_USER,
             'password' => DB_PASSWORD,
             'host' => DB_HOST,
@@ -30,7 +30,7 @@ class NestedSetBootstrap
         return self::$connection = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
     }
 
-    public static function validateTree(int $rootId)
+    public static function validateTree(int $rootId): void
     {
         $tree = self::getConnection()->fetchAll(
             'SELECT * FROM tree WHERE root_id = :rootId ORDER BY `left`;',
@@ -44,7 +44,7 @@ class NestedSetBootstrap
         }
     }
 
-    public static function printTree(int $rootId)
+    public static function printTree(int $rootId): void
     {
         $tree = self::getConnection()->fetchAll('SELECT * FROM tree WHERE root_id = :rootId ORDER BY `left`;', ['rootId' => $rootId]);
 
@@ -61,7 +61,7 @@ class NestedSetBootstrap
         }
     }
 
-    public static function importTable()
+    public static function importTable(): void
     {
         $tableFactory = \Shopware\DbalNestedSet\NestedSetFactory::createTableFactory(
             self::getConnection(),
@@ -85,7 +85,7 @@ class NestedSetBootstrap
         self::getConnection()->exec($addSql[0]);
     }
 
-    public static function insertDemoTree(int $rootId = 1)
+    public static function insertDemoTree(int $rootId = 1): void
     {
         $data = [
             [1,  1, 22, 0, 'Clothing'],
@@ -113,18 +113,19 @@ class NestedSetBootstrap
         }
     }
 
-    public static function getEnvOrSet(string $name, string $defaultValue)
+    public static function getEnvOrSet(string $name, string $defaultValue): void
     {
-        $value = getenv($name);
+        $value = \getenv($name);
 
-        if (false === $value) {
+        if ($value === false) {
             $value = $defaultValue;
         }
 
-        define($name, $value);
+        \define($name, $value);
     }
 }
 
 NestedSetBootstrap::getEnvOrSet('DB_PASSWORD', 'root');
 NestedSetBootstrap::getEnvOrSet('DB_USER', 'root');
 NestedSetBootstrap::getEnvOrSet('DB_HOST', 'localhost');
+NestedSetBootstrap::getEnvOrSet('DB_NAME', 'nested_set');

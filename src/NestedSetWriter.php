@@ -6,6 +6,7 @@ use Doctrine\DBAL\Connection;
 use Shopware\DbalNestedSet\Tool\NestedSetArrayNodeInspector;
 use Shopware\DbalNestedSet\Tool\NestedSetConfigAware;
 use Shopware\DbalNestedSet\Tool\NestedSetReader;
+use function array_merge;
 
 class NestedSetWriter
 {
@@ -177,7 +178,7 @@ class NestedSetWriter
     /**
      * @throws NestedSetExceptionInvalidNodeOperation
      */
-    public function moveAsLastChild(string $tableExpression, string $rootColumnName, int $parentId, int $childId)
+    public function moveAsLastChild(string $tableExpression, string $rootColumnName, int $parentId, int $childId): void
     {
         $this->setRootColName($rootColumnName, $this->connection);
 
@@ -199,7 +200,7 @@ class NestedSetWriter
     /**
      * @throws NestedSetExceptionInvalidNodeOperation
      */
-    public function moveAsFirstChild(string $tableExpression, string $rootColumnName, int $parentId, int $childId)
+    public function moveAsFirstChild(string $tableExpression, string $rootColumnName, int $parentId, int $childId): void
     {
         $this->setRootColName($rootColumnName, $this->connection);
 
@@ -221,7 +222,7 @@ class NestedSetWriter
     /**
      * @throws NestedSetExceptionInvalidNodeOperation
      */
-    public function moveAsPrevSibling(string $tableExpression, string $rootColumnName, int $siblingId, int $childId)
+    public function moveAsPrevSibling(string $tableExpression, string $rootColumnName, int $siblingId, int $childId): void
     {
         $this->setRootColName($rootColumnName, $this->connection);
 
@@ -243,7 +244,7 @@ class NestedSetWriter
     /**
      * @throws NestedSetExceptionInvalidNodeOperation
      */
-    public function moveAsNextSibling(string $tableExpression, string $rootColumnName, int $siblingId, int $childId)
+    public function moveAsNextSibling(string $tableExpression, string $rootColumnName, int $siblingId, int $childId): void
     {
         $this->setRootColName($rootColumnName, $this->connection);
 
@@ -262,7 +263,7 @@ class NestedSetWriter
         $this->updateNodePosition($tableExpression, $child, $sibling['right'] + 1, $level - $child['level']);
     }
 
-    public function removeNode(string $tableExpression, string $rootColumnName, int $nodeId)
+    public function removeNode(string $tableExpression, string $rootColumnName, int $nodeId): void
     {
         $this->setRootColName($rootColumnName, $this->connection);
         $node = $this->reader->fetchNodeData($tableExpression, $rootColumnName, $nodeId);
@@ -314,7 +315,7 @@ class NestedSetWriter
      *
      * @param int $destLeft destination left value
      */
-    private function updateNodePosition(string $tableExpression, array $nodeData, int $destLeft, int $levelDiff)
+    private function updateNodePosition(string $tableExpression, array $nodeData, int $destLeft, int $levelDiff): void
     {
         $left = $nodeData['left'];
         $right = $nodeData['right'];
@@ -355,7 +356,7 @@ class NestedSetWriter
      * @param int $first First node to be shifted
      * @param int $delta Value to be shifted by, can be negative
      */
-    private function applyDeltaToSubsequendNodes(string $tableExpression, int $rootValue, int $first, int $delta)
+    private function applyDeltaToSubsequendNodes(string $tableExpression, int $rootValue, int $first, int $delta): void
     {
         $this->connection->createQueryBuilder()
             ->update($tableExpression)
@@ -390,7 +391,7 @@ class NestedSetWriter
      * @param int $last Last node to be shifted (L value)
      * @param int $delta Value to be shifted by, can be negative
      */
-    private function applyDeltaToSubtree(string $tableExpression, int $rootValue, int $first, int $last, int $delta)
+    private function applyDeltaToSubtree(string $tableExpression, int $rootValue, int $first, int $last, int $delta): void
     {
         $this->connection->createQueryBuilder()
             ->update($tableExpression)
@@ -419,7 +420,7 @@ class NestedSetWriter
             ->execute();
     }
 
-    private function updateLevel(string $tableExpression, int $id, int $level)
+    private function updateLevel(string $tableExpression, int $id, int $level): void
     {
         $this->connection->update(
             $tableExpression,
