@@ -1,6 +1,8 @@
 Doctrine DBAL Nested Set
 ====================
 
+## Used in B2B Suite for Shopware 5
+
 A multi root nested set implementation for DBAL users.
 
 ## Description
