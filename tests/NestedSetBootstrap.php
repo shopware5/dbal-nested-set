@@ -1,9 +1,13 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\DriverManager;
+use PHPUnit\Framework\TestCase;
 
 class NestedSetBootstrap
 {
@@ -27,7 +31,7 @@ class NestedSetBootstrap
             'driver' => 'pdo_mysql',
         ];
 
-        return self::$connection = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
+        return self::$connection = DriverManager::getConnection($connectionParams, $config);
     }
 
     public static function validateTree(int $rootId): void
@@ -40,7 +44,7 @@ class NestedSetBootstrap
         foreach ($tree as $node) {
             $leftEven = (($node['left'] % 2) === 0);
             $rightEven = (($node['right'] % 2) === 0);
-            \PHPUnit\Framework\TestCase::assertNotEquals($leftEven, $rightEven, "\nERROR {$node['name']} is invalid\n");
+            TestCase::assertNotEquals($leftEven, $rightEven, "\nERROR {$node['name']} is invalid\n");
         }
     }
 
@@ -53,7 +57,7 @@ class NestedSetBootstrap
         foreach ($tree as $node) {
             echo $node['id'] . "\t" . $node['left'] . "\t " . $node['right'] . "\t " . $node['level'] . "\t";
 
-            for ($i = 0; $i < $node['level']; $i++) {
+            for ($i = 0; $i < $node['level']; ++$i) {
                 echo "\t";
             }
 
@@ -63,12 +67,12 @@ class NestedSetBootstrap
 
     public static function importTable(): void
     {
-        $tableFactory = \Shopware\DbalNestedSet\NestedSetFactory::createTableFactory(
+        $tableFactory = Shopware\DbalNestedSet\NestedSetFactory::createTableFactory(
             self::getConnection(),
-            new \Shopware\DbalNestedSet\NestedSetConfig('id', 'left', 'right', 'level')
+            new Shopware\DbalNestedSet\NestedSetConfig('id', 'left', 'right', 'level')
         );
 
-        $schema = new \Doctrine\DBAL\Schema\Schema();
+        $schema = new Doctrine\DBAL\Schema\Schema();
         $table = $tableFactory->createTable($schema, 'tree', 'root_id');
         $table->addColumn('id', 'integer', ['unsigned' => true, 'autoincrement' => true]);
         $table->addColumn('name', 'string', ['length' => 255]);
@@ -79,8 +83,8 @@ class NestedSetBootstrap
 
         try {
             self::getConnection()->exec($dropSql[0]);
-        } catch (\Doctrine\DBAL\Exception\TableNotFoundException $e) {
-            //nth
+        } catch (Doctrine\DBAL\Exception\TableNotFoundException $e) {
+            // nth
         }
         self::getConnection()->exec($addSql[0]);
     }
@@ -115,13 +119,13 @@ class NestedSetBootstrap
 
     public static function getEnvOrSet(string $name, string $defaultValue): void
     {
-        $value = \getenv($name);
+        $value = getenv($name);
 
         if ($value === false) {
             $value = $defaultValue;
         }
 
-        \define($name, $value);
+        define($name, $value);
     }
 }
 

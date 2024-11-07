@@ -1,12 +1,12 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Shopware\DbalNestedSet\Tool;
 
 use Doctrine\DBAL\Connection;
-use PDO;
 use Shopware\DbalNestedSet\NestedSetConfig;
 use Shopware\DbalNestedSet\NestedSetExceptionNodeNotFound;
-use function array_map;
 
 class NestedSetReader
 {
@@ -43,13 +43,13 @@ class NestedSetReader
             ->where($this->pkCol . '= :nodeId')
             ->setParameter('nodeId', $nodeId)
             ->execute()
-            ->fetch(PDO::FETCH_ASSOC);
+            ->fetch(\PDO::FETCH_ASSOC);
 
         if (!$data) {
             throw new NestedSetExceptionNodeNotFound("No node found with id $nodeId");
         }
 
-        $data = array_map('intval', $data);
+        $data = \array_map('intval', $data);
 
         $data['isRoot'] = $data['left'] === 1;
         $data['isLeaf'] = ($data['left'] + 1) === $data['right'];

@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Shopware\DbalNestedSet\Tool;
 
@@ -37,9 +39,9 @@ class NestedSetNodeInspector
         int $node2RightValue,
         int $node2RootValue
     ): bool {
-        return ($node1LeftValue === $node2LeftValue) &&
-            ($node1RightValue === $node2RightValue) &&
-            ($node1RootValue === $node2RootValue);
+        return ($node1LeftValue === $node2LeftValue)
+            && ($node1RightValue === $node2RightValue)
+            && ($node1RootValue === $node2RootValue);
     }
 
     /**
@@ -53,9 +55,9 @@ class NestedSetNodeInspector
         int $node2RightValue,
         int $node2RootValue
     ): bool {
-        return ($node1LeftValue > $node2LeftValue) &&
-            ($node1RightValue < $node2RightValue) &&
-            ($node1RootValue === $node2RootValue);
+        return ($node1LeftValue > $node2LeftValue)
+            && ($node1RightValue < $node2RightValue)
+            && ($node1RootValue === $node2RootValue);
     }
 
     /**
@@ -69,9 +71,9 @@ class NestedSetNodeInspector
         int $node2RightValue,
         int $node2RootValue
     ): bool {
-        return ($node1LeftValue >= $node2LeftValue) &&
-            ($node1RightValue <= $node2RightValue) &&
-            ($node1RootValue === $node2RootValue);
+        return ($node1LeftValue >= $node2LeftValue)
+            && ($node1RightValue <= $node2RightValue)
+            && ($node1RootValue === $node2RootValue);
     }
 
     /**
@@ -85,8 +87,8 @@ class NestedSetNodeInspector
         int $node2RightValue,
         int $node2RootValue
     ): bool {
-        return ($node1LeftValue < $node2LeftValue) &&
-            ($node1RightValue > $node2RightValue) &&
-            ($node1RootValue === $node2RootValue);
+        return ($node1LeftValue < $node2LeftValue)
+            && ($node1RightValue > $node2RightValue)
+            && ($node1RootValue === $node2RootValue);
     }
 }

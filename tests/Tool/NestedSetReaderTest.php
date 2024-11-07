@@ -1,8 +1,9 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Shopware\DbalNestedSetTest;
 
-use NestedSetBootstrap;
 use PHPUnit\Framework\TestCase;
 use Shopware\DbalNestedSet\NestedSetConfig;
 use Shopware\DbalNestedSet\NestedSetExceptionNodeNotFound;
@@ -15,27 +16,27 @@ class NestedSetReaderTest extends TestCase
      */
     private $reader;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
-        $connection = NestedSetBootstrap::getConnection();
-        NestedSetBootstrap::importTable();
-        NestedSetBootstrap::insertDemoTree();
+        $connection = \NestedSetBootstrap::getConnection();
+        \NestedSetBootstrap::importTable();
+        \NestedSetBootstrap::insertDemoTree();
         $this->reader = new NestedSetReader($connection, new NestedSetConfig('id', 'left', 'right', 'level'));
     }
 
-    public function test_fetch_a_node(): void
+    public function testFetchANode(): void
     {
         $node = $this->reader
             ->fetchNodeData('tree', 'root_id', 2);
 
-        self::assertEquals(2, $node['id']);
-        self::assertEquals(2, $node['left']);
-        self::assertEquals(9, $node['right']);
-        self::assertEquals(1, $node['level']);
-        self::assertEquals(1, $node['root_id']);
+        static::assertEquals(2, $node['id']);
+        static::assertEquals(2, $node['left']);
+        static::assertEquals(9, $node['right']);
+        static::assertEquals(1, $node['level']);
+        static::assertEquals(1, $node['root_id']);
     }
 
-    public function test_fetch_a_node_not_found(): void
+    public function testFetchANodeNotFound(): void
     {
         $this->expectException(NestedSetExceptionNodeNotFound::class);
         $this->reader

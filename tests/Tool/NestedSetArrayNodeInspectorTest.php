@@ -1,8 +1,9 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Shopware\DbalNestedSetTest\Tool;
 
-use NestedSetBootstrap;
 use PHPUnit\Framework\TestCase;
 use Shopware\DbalNestedSet\NestedSetConfig;
 use Shopware\DbalNestedSet\Tool\NestedSetArrayNodeInspector;
@@ -21,22 +22,22 @@ class NestedSetArrayNodeInspectorTest extends TestCase
      */
     private $reader;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
-        $connection = NestedSetBootstrap::getConnection();
-        NestedSetBootstrap::importTable();
-        NestedSetBootstrap::insertDemoTree();
+        $connection = \NestedSetBootstrap::getConnection();
+        \NestedSetBootstrap::importTable();
+        \NestedSetBootstrap::insertDemoTree();
         $this->inspector = new NestedSetArrayNodeInspector(new NestedSetNodeInspector());
         $this->reader = new NestedSetReader($connection, new NestedSetConfig('id', 'left', 'right', 'level'));
     }
 
-    public function test_is_equal(): void
+    public function testIsEqual(): void
     {
-        self::assertTrue($this->inspector->isEqual(
+        static::assertTrue($this->inspector->isEqual(
             $this->reader->fetchNodeData('tree', 'root_id', 2),
             $this->reader->fetchNodeData('tree', 'root_id', 2)
         ));
-        self::assertFalse($this->inspector->isEqual(
+        static::assertFalse($this->inspector->isEqual(
             $this->reader->fetchNodeData('tree', 'root_id', 1),
             $this->reader->fetchNodeData('tree', 'root_id', 2)
         ));

@@ -1,8 +1,9 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Shopware\DbalNestedSetTest;
 
-use NestedSetBootstrap;
 use PHPUnit\Framework\TestCase;
 use Shopware\DbalNestedSet\NestedSetConfig;
 use Shopware\DbalNestedSet\NestedSetFactory;
@@ -15,44 +16,44 @@ class NestedSetTableNodeInspectorTest extends TestCase
      */
     private $inspector;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
-        $connection = NestedSetBootstrap::getConnection();
-        NestedSetBootstrap::importTable();
-        NestedSetBootstrap::insertDemoTree();
+        $connection = \NestedSetBootstrap::getConnection();
+        \NestedSetBootstrap::importTable();
+        \NestedSetBootstrap::insertDemoTree();
         $this->inspector = NestedSetFactory::createTableNodeInspector($connection, new NestedSetConfig('id', 'left', 'right', 'level'));
     }
 
-    public function test_is_leaf(): void
+    public function testIsLeaf(): void
     {
-        self::assertTrue($this->inspector->isLeaf('tree', 'root_id', 9));
-        self::assertFalse($this->inspector->isLeaf('tree', 'root_id', 2));
+        static::assertTrue($this->inspector->isLeaf('tree', 'root_id', 9));
+        static::assertFalse($this->inspector->isLeaf('tree', 'root_id', 2));
     }
 
-    public function test_is_root(): void
+    public function testIsRoot(): void
     {
-        self::assertTrue($this->inspector->isRoot('tree', 'root_id', 1));
-        self::assertFalse($this->inspector->isRoot('tree', 'root_id', 2));
+        static::assertTrue($this->inspector->isRoot('tree', 'root_id', 1));
+        static::assertFalse($this->inspector->isRoot('tree', 'root_id', 2));
     }
 
-    public function test_is_descandanant(): void
+    public function testIsDescandanant(): void
     {
-        self::assertTrue($this->inspector->isDescendant('tree', 'root_id', 2, 1));
-        self::assertFalse($this->inspector->isDescendant('tree', 'root_id', 1, 2));
-        self::assertFalse($this->inspector->isDescendant('tree', 'root_id', 1, 1));
+        static::assertTrue($this->inspector->isDescendant('tree', 'root_id', 2, 1));
+        static::assertFalse($this->inspector->isDescendant('tree', 'root_id', 1, 2));
+        static::assertFalse($this->inspector->isDescendant('tree', 'root_id', 1, 1));
     }
 
-    public function test_is_descandanant_or_equal(): void
+    public function testIsDescandanantOrEqual(): void
     {
-        self::assertTrue($this->inspector->isDescendantOfOrEqual('tree', 'root_id', 2, 1));
-        self::assertFalse($this->inspector->isDescendantOfOrEqual('tree', 'root_id', 1, 2));
-        self::assertTrue($this->inspector->isDescendantOfOrEqual('tree', 'root_id', 1, 1));
+        static::assertTrue($this->inspector->isDescendantOfOrEqual('tree', 'root_id', 2, 1));
+        static::assertFalse($this->inspector->isDescendantOfOrEqual('tree', 'root_id', 1, 2));
+        static::assertTrue($this->inspector->isDescendantOfOrEqual('tree', 'root_id', 1, 1));
     }
 
-    public function test_is_ancestor(): void
+    public function testIsAncestor(): void
     {
-        self::assertTrue($this->inspector->isAncestor('tree', 'root_id', 1, 2));
-        self::assertFalse($this->inspector->isAncestor('tree', 'root_id', 2, 1));
-        self::assertFalse($this->inspector->isAncestor('tree', 'root_id', 1, 1));
+        static::assertTrue($this->inspector->isAncestor('tree', 'root_id', 1, 2));
+        static::assertFalse($this->inspector->isAncestor('tree', 'root_id', 2, 1));
+        static::assertFalse($this->inspector->isAncestor('tree', 'root_id', 1, 1));
     }
 }

@@ -1,8 +1,9 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Shopware\DbalNestedSetTest;
 
-use NestedSetBootstrap;
 use PHPUnit\Framework\TestCase;
 use Shopware\DbalNestedSet\NestedSetConfig;
 use Shopware\DbalNestedSet\NestedSetExceptionInvalidNodeOperation;
@@ -22,15 +23,15 @@ class NestedSetWriterTest extends TestCase
      */
     private $reader;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
-        $connection = NestedSetBootstrap::getConnection();
-        NestedSetBootstrap::importTable();
+        $connection = \NestedSetBootstrap::getConnection();
+        \NestedSetBootstrap::importTable();
         $this->writer = NestedSetFactory::createWriter($connection, new NestedSetConfig('id', 'left', 'right', 'level'));
         $this->reader = new NestedSetReader($connection, new NestedSetConfig('id', 'left', 'right', 'level'));
     }
 
-    public function test_insertAsLastChild_by_recreating_the_demo_tree(): void
+    public function testInsertAsLastChildByRecreatingTheDemoTree(): void
     {
         $this->writer->insertRoot('tree', 'root_id', 100, ['name' => 'Clothing']);
         $this->writer->insertAsLastChild('tree', 'root_id', 1, ['name' => 'Men']);
@@ -43,7 +44,7 @@ class NestedSetWriterTest extends TestCase
         $this->writer->insertAsLastChild('tree', 'root_id', 4, ['name' => 'Jackets']);
         $this->writer->insertAsLastChild('tree', 'root_id', 5, ['name' => 'Evening Gowns']);
         $this->writer->insertAsLastChild('tree', 'root_id', 5, ['name' => 'Sun Dresses']);
-        NestedSetBootstrap::validateTree(100);
+        \NestedSetBootstrap::validateTree(100);
 
         $this->assertNode(1, 1, 22, 0, 100);
         $this->assertNode(2, 2, 9, 1, 100);
@@ -58,7 +59,7 @@ class NestedSetWriterTest extends TestCase
         $this->assertNode(7, 19, 20, 2, 100);
     }
 
-    public function test_insertAsFirstChild_by_recreating_the_demo_tree(): void
+    public function testInsertAsFirstChildByRecreatingTheDemoTree(): void
     {
         $this->writer->insertRoot('tree', 'root_id', 100, ['name' => 'Clothing']);
         $this->writer->insertAsFirstChild('tree', 'root_id', 1, ['name' => 'Women']);
@@ -71,7 +72,7 @@ class NestedSetWriterTest extends TestCase
         $this->writer->insertAsFirstChild('tree', 'root_id', 4, ['name' => 'Slacks']);
         $this->writer->insertAsFirstChild('tree', 'root_id', 7, ['name' => 'Sun Dresses']);
         $this->writer->insertAsFirstChild('tree', 'root_id', 7, ['name' => 'Evening Gowns']);
-        NestedSetBootstrap::validateTree(100);
+        \NestedSetBootstrap::validateTree(100);
 
         $this->assertNode(1, 1, 22, 0, 100);
         $this->assertNode(3, 2, 9, 1, 100);
@@ -86,7 +87,7 @@ class NestedSetWriterTest extends TestCase
         $this->assertNode(5, 19, 20, 2, 100);
     }
 
-    public function test_insertAsNextSibling_by_recreating_the_demo_tree_using_insert_as_fist_child_where_necessary(): void
+    public function testInsertAsNextSiblingByRecreatingTheDemoTreeUsingInsertAsFistChildWhereNecessary(): void
     {
         $this->writer->insertRoot('tree', 'root_id', 100, ['name' => 'Clothing']);
         $this->writer->insertAsFirstChild('tree', 'root_id', 1, ['name' => 'Men']);
@@ -99,7 +100,7 @@ class NestedSetWriterTest extends TestCase
         $this->writer->insertAsFirstChild('tree', 'root_id', 4, ['name' => 'Slacks']);
         $this->writer->insertAsFirstChild('tree', 'root_id', 5, ['name' => 'Evening Gowns']);
         $this->writer->insertAsNextSibling('tree', 'root_id', 10, ['name' => 'Sun Dresses']);
-        NestedSetBootstrap::validateTree(100);
+        \NestedSetBootstrap::validateTree(100);
 
         $this->assertNode(1, 1, 22, 0, 100);
         $this->assertNode(2, 2, 9, 1, 100);
@@ -114,7 +115,7 @@ class NestedSetWriterTest extends TestCase
         $this->assertNode(7, 19, 20, 2, 100);
     }
 
-    public function test_insertAsPrevSibling_by_recreating_the_demo_tree_using_insert_as_last_child_where_necessary(): void
+    public function testInsertAsPrevSiblingByRecreatingTheDemoTreeUsingInsertAsLastChildWhereNecessary(): void
     {
         $this->writer->insertRoot('tree', 'root_id', 100, ['name' => 'Clothing']);
         $this->writer->insertAsLastChild('tree', 'root_id', 1, ['name' => 'Women']);
@@ -127,7 +128,7 @@ class NestedSetWriterTest extends TestCase
         $this->writer->insertAsPrevSibling('tree', 'root_id', 8, ['name' => 'Slacks']);
         $this->writer->insertAsLastChild('tree', 'root_id', 6, ['name' => 'Sun Dresses']);
         $this->writer->insertAsPrevSibling('tree', 'root_id', 10, ['name' => 'Evening Gowns']);
-        NestedSetBootstrap::validateTree(100);
+        \NestedSetBootstrap::validateTree(100);
 
         $this->assertNode(1, 1, 22, 0, 100);
         $this->assertNode(3, 2, 9, 1, 100);
@@ -142,13 +143,13 @@ class NestedSetWriterTest extends TestCase
         $this->assertNode(5, 19, 20, 2, 100);
     }
 
-    public function test_move_as_last_child(): void
+    public function testMoveAsLastChild(): void
     {
-        NestedSetBootstrap::insertDemoTree();
+        \NestedSetBootstrap::insertDemoTree();
 
         $this->writer->moveAsLastChild('tree', 'root_id', 3, 7);
 
-        NestedSetBootstrap::validateTree(1);
+        \NestedSetBootstrap::validateTree(1);
 
         $this->assertNode(1, 1, 22, 0, 1);
         $this->assertNode(2, 2, 9, 1, 1);
@@ -163,13 +164,13 @@ class NestedSetWriterTest extends TestCase
         $this->assertNode(11, 18, 19, 3, 1);
     }
 
-    public function test_move_as_last_child_with_different_levels(): void
+    public function testMoveAsLastChildWithDifferentLevels(): void
     {
-        NestedSetBootstrap::insertDemoTree();
+        \NestedSetBootstrap::insertDemoTree();
 
-        $this->writer->moveAsLastChild('tree', 'root_id', 3, 2); //make men last child of women
+        $this->writer->moveAsLastChild('tree', 'root_id', 3, 2); // make men last child of women
 
-        NestedSetBootstrap::validateTree(1);
+        \NestedSetBootstrap::validateTree(1);
 
         $this->assertNode(1, 1, 22, 0, 1);
         $this->assertNode(3, 2, 21, 1, 1);
@@ -184,21 +185,21 @@ class NestedSetWriterTest extends TestCase
         $this->assertNode(6, 17, 18, 4, 1);
     }
 
-    public function test_move_as_last_child_throws(): void
+    public function testMoveAsLastChildThrows(): void
     {
-        NestedSetBootstrap::insertDemoTree();
+        \NestedSetBootstrap::insertDemoTree();
 
         $this->expectException(NestedSetExceptionInvalidNodeOperation::class);
         $this->writer->moveAsLastChild('tree', 'root_id', 7, 3);
     }
 
-    public function test_move_as_first_child(): void
+    public function testMoveAsFirstChild(): void
     {
-        NestedSetBootstrap::insertDemoTree();
+        \NestedSetBootstrap::insertDemoTree();
 
         $this->writer->moveAsFirstChild('tree', 'root_id', 3, 7);
 
-        NestedSetBootstrap::validateTree(1);
+        \NestedSetBootstrap::validateTree(1);
 
         $this->assertNode(1, 1, 22, 0, 1);
         $this->assertNode(2, 2, 9, 1, 1);
@@ -213,21 +214,21 @@ class NestedSetWriterTest extends TestCase
         $this->assertNode(9, 19, 20, 2, 1);
     }
 
-    public function test_move_as_first_child_throws(): void
+    public function testMoveAsFirstChildThrows(): void
     {
-        NestedSetBootstrap::insertDemoTree();
+        \NestedSetBootstrap::insertDemoTree();
 
         $this->expectException(NestedSetExceptionInvalidNodeOperation::class);
         $this->writer->moveAsFirstChild('tree', 'root_id', 7, 3);
     }
 
-    public function test_move_as_prev_sibling(): void
+    public function testMoveAsPrevSibling(): void
     {
-        NestedSetBootstrap::insertDemoTree();
+        \NestedSetBootstrap::insertDemoTree();
 
         $this->writer->moveAsPrevSibling('tree', 'root_id', 4, 7);
 
-        NestedSetBootstrap::validateTree(1);
+        \NestedSetBootstrap::validateTree(1);
 
         $this->assertNode(1, 1, 22, 0, 1);
         $this->assertNode(2, 2, 15, 1, 1);
@@ -242,21 +243,21 @@ class NestedSetWriterTest extends TestCase
         $this->assertNode(9, 19, 20, 2, 1);
     }
 
-    public function test_move_as_prev_sibling_throws(): void
+    public function testMoveAsPrevSiblingThrows(): void
     {
-        NestedSetBootstrap::insertDemoTree();
+        \NestedSetBootstrap::insertDemoTree();
 
         $this->expectException(NestedSetExceptionInvalidNodeOperation::class);
         $this->writer->moveAsPrevSibling('tree', 'root_id', 4, 1);
     }
 
-    public function test_move_as_next_sibling(): void
+    public function testMoveAsNextSibling(): void
     {
-        NestedSetBootstrap::insertDemoTree();
+        \NestedSetBootstrap::insertDemoTree();
 
         $this->writer->moveAsNextSibling('tree', 'root_id', 4, 7);
 
-        NestedSetBootstrap::validateTree(1);
+        \NestedSetBootstrap::validateTree(1);
 
         $this->assertNode(1, 1, 22, 0, 1);
         $this->assertNode(2, 2, 15, 1, 1);
@@ -271,22 +272,22 @@ class NestedSetWriterTest extends TestCase
         $this->assertNode(9, 19, 20, 2, 1);
     }
 
-    public function test_move_as_next_sibling_throws(): void
+    public function testMoveAsNextSiblingThrows(): void
     {
-        NestedSetBootstrap::insertDemoTree();
+        \NestedSetBootstrap::insertDemoTree();
 
         $this->expectException(NestedSetExceptionInvalidNodeOperation::class);
         $this->writer->moveAsNextSibling('tree', 'root_id', 4, 1);
     }
 
-    public function test_delete(): void
+    public function testDelete(): void
     {
-        NestedSetBootstrap::insertDemoTree();
-        NestedSetBootstrap::insertDemoTree(2);
+        \NestedSetBootstrap::insertDemoTree();
+        \NestedSetBootstrap::insertDemoTree(2);
 
         $this->writer->removeNode('tree', 'root_id', 2);
 
-        NestedSetBootstrap::validateTree(1);
+        \NestedSetBootstrap::validateTree(1);
 
         $this->assertNode(1, 1, 14, 0, 1);
         $this->assertNode(3, 2, 13, 1, 1);
@@ -304,9 +305,9 @@ class NestedSetWriterTest extends TestCase
     {
         $nodeData = $this->reader->fetchNodeData('tree', 'root_id', $nodeId);
 
-        self::assertSame($leftValue, $nodeData['left'], 'left value');
-        self::assertSame($rightValue, $nodeData['right'], 'right value');
-        self::assertSame($level, $nodeData['level'], 'level value');
-        self::assertSame($rootId, $nodeData['root_id'], 'root id');
+        static::assertSame($leftValue, $nodeData['left'], 'left value');
+        static::assertSame($rightValue, $nodeData['right'], 'right value');
+        static::assertSame($level, $nodeData['level'], 'level value');
+        static::assertSame($rootId, $nodeData['root_id'], 'root id');
     }
 }
