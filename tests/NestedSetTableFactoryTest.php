@@ -1,10 +1,11 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Shopware\DbalNestedSetTest;
 
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Schema\Schema;
-use NestedSetBootstrap;
 use PHPUnit\Framework\TestCase;
 use Shopware\DbalNestedSet\NestedSetConfig;
 use Shopware\DbalNestedSet\NestedSetFactory;
@@ -22,22 +23,22 @@ class NestedSetTableFactoryTest extends TestCase
      */
     private $platform;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
-        $connection = NestedSetBootstrap::getConnection();
+        $connection = \NestedSetBootstrap::getConnection();
         $this->platform = $connection->getDatabasePlatform();
         $this->factory = NestedSetFactory::createTableFactory($connection, new NestedSetConfig('id', 'left', 'right', 'level'));
     }
 
-    public function test_adds_tables_to_the_schema(): void
+    public function testAddsTablesToTheSchema(): void
     {
         $schema = new Schema();
         $this->factory->createTable($schema, 'tree', 'root_id');
         $this->factory->createTable($schema, 'tree2', 'not_root_id');
         $sql = $schema->toSql($this->platform);
 
-        self::assertTrue($schema->getTable('tree2')->hasColumn('not_root_id'));
-        self::assertCount(2, $schema->getTables());
-        self::assertCount(2, $sql);
+        static::assertTrue($schema->getTable('tree2')->hasColumn('not_root_id'));
+        static::assertCount(2, $schema->getTables());
+        static::assertCount(2, $sql);
     }
 }

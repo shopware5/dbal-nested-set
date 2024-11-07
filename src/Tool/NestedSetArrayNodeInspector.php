@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Shopware\DbalNestedSet\Tool;
 
@@ -39,8 +41,12 @@ class NestedSetArrayNodeInspector
     public function isEqual(array $node1, array $node2): bool
     {
         return $this->inspector->isEqual(
-            $node1['left'], $node1['right'], $node1['root_id'],
-            $node2['left'], $node2['right'], $node2['root_id']
+            $node1['left'],
+            $node1['right'],
+            $node1['root_id'],
+            $node2['left'],
+            $node2['right'],
+            $node2['root_id']
         );
     }
 
@@ -50,8 +56,12 @@ class NestedSetArrayNodeInspector
     public function isDescendant(array $node1, array $node2): bool
     {
         return $this->inspector->isDescendant(
-            $node1['left'], $node1['right'], $node1['root_id'],
-            $node2['left'], $node2['right'], $node2['root_id']
+            $node1['left'],
+            $node1['right'],
+            $node1['root_id'],
+            $node2['left'],
+            $node2['right'],
+            $node2['root_id']
         );
     }
 
@@ -61,8 +71,12 @@ class NestedSetArrayNodeInspector
     public function isDescendantOrEqual(array $node1, array $node2): bool
     {
         return $this->inspector->isDescendantOrEqual(
-            $node1['left'], $node1['right'], $node1['root_id'],
-            $node2['left'], $node2['right'], $node2['root_id']
+            $node1['left'],
+            $node1['right'],
+            $node1['root_id'],
+            $node2['left'],
+            $node2['right'],
+            $node2['root_id']
         );
     }
 
@@ -72,8 +86,12 @@ class NestedSetArrayNodeInspector
     public function isAncestor(array $node1, array $node2): bool
     {
         return $this->inspector->isAncestor(
-            $node1['left'], $node1['right'], $node1['root_id'],
-            $node2['left'], $node2['right'], $node2['root_id']
+            $node1['left'],
+            $node1['right'],
+            $node1['root_id'],
+            $node2['left'],
+            $node2['right'],
+            $node2['root_id']
         );
     }
 }

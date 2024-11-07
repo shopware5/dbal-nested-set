@@ -1,9 +1,9 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Shopware\DbalNestedSet;
 
-use InvalidArgumentException;
-
-class NestedSetExceptionInvalidNodeOperation extends InvalidArgumentException
+class NestedSetExceptionInvalidNodeOperation extends \InvalidArgumentException
 {
 }

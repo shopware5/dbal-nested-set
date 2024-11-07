@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Shopware\DbalNestedSet;
 
@@ -6,7 +8,6 @@ use Doctrine\DBAL\Connection;
 use Shopware\DbalNestedSet\Tool\NestedSetArrayNodeInspector;
 use Shopware\DbalNestedSet\Tool\NestedSetConfigAware;
 use Shopware\DbalNestedSet\Tool\NestedSetReader;
-use function array_merge;
 
 class NestedSetWriter
 {
@@ -54,7 +55,7 @@ class NestedSetWriter
         $this->connection
             ->insert(
                 $tableExpression,
-                array_merge(
+                \array_merge(
                     $nestedSetRootData,
                     $data
                 ),
@@ -270,9 +271,9 @@ class NestedSetWriter
 
         $this->connection
             ->executeUpdate(
-                "DELETE FROM {$tableExpression} 
+                "DELETE FROM {$tableExpression}
                  WHERE {$this->leftCol} >= :left
-                   AND {$this->rightCol} <= :right                   
+                   AND {$this->rightCol} <= :right
                    AND {$this->rootCol} = :rootId
                 ",
                 [
@@ -302,7 +303,7 @@ class NestedSetWriter
         $this->connection
             ->insert(
                 $tableExpression,
-                array_merge($data, $newNodeNestedSetData),
+                \array_merge($data, $newNodeNestedSetData),
                 $types
             );
 

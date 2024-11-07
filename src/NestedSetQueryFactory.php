@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Shopware\DbalNestedSet;
 
@@ -210,8 +212,8 @@ class NestedSetQueryFactory
                 $this->connection->quoteIdentifier($tableExpression),
                 "{$queryAlias}ParentNode",
                 "
-                    {$queryAlias}SiblingNode.{$this->leftCol} >= {$queryAlias}ParentNode.{$this->leftCol} 
-                AND {$queryAlias}SiblingNode.{$this->rightCol} <= {$queryAlias}ParentNode.{$this->rightCol} 
+                    {$queryAlias}SiblingNode.{$this->leftCol} >= {$queryAlias}ParentNode.{$this->leftCol}
+                AND {$queryAlias}SiblingNode.{$this->rightCol} <= {$queryAlias}ParentNode.{$this->rightCol}
                 AND {$queryAlias}SiblingNode.{$this->levelCol} = {$queryAlias}ParentNode.{$this->levelCol} + 1
                 AND {$queryAlias}SiblingNode.{$this->rootCol} = {$queryAlias}ParentNode.{$this->rootCol}
                 "
@@ -221,8 +223,8 @@ class NestedSetQueryFactory
                 '(' . $directNodeSubSelect->getSQL() . ')',
                 "{$queryAlias}SelectedNode",
                 "
-                    {$queryAlias}ParentNode.{$this->leftCol} < {$queryAlias}SelectedNode.{$this->leftCol} 
-                AND {$queryAlias}ParentNode.{$this->rightCol} > {$queryAlias}SelectedNode.{$this->rightCol} 
+                    {$queryAlias}ParentNode.{$this->leftCol} < {$queryAlias}SelectedNode.{$this->leftCol}
+                AND {$queryAlias}ParentNode.{$this->rightCol} > {$queryAlias}SelectedNode.{$this->rightCol}
                 AND {$queryAlias}ParentNode.{$this->rootCol} = {$queryAlias}SelectedNode.{$this->rootCol}
                 "
             );
@@ -247,8 +249,8 @@ class NestedSetQueryFactory
                 '(' . $directNodeSubSelect->getSQL() . ')',
                 "{$queryAlias}SelectedNode",
                 "
-                    {$queryAlias}ChildNode.{$this->leftCol} > {$queryAlias}SelectedNode.{$this->leftCol} 
-                AND {$queryAlias}ChildNode.{$this->rightCol} < {$queryAlias}SelectedNode.{$this->rightCol} 
+                    {$queryAlias}ChildNode.{$this->leftCol} > {$queryAlias}SelectedNode.{$this->leftCol}
+                AND {$queryAlias}ChildNode.{$this->rightCol} < {$queryAlias}SelectedNode.{$this->rightCol}
                 AND {$queryAlias}ChildNode.{$this->levelCol} <= ({$queryAlias}SelectedNode.{$this->levelCol} + :{$queryAlias}maxChildLevel)
                 AND {$queryAlias}ChildNode.{$this->rootCol} = {$queryAlias}SelectedNode.{$this->rootCol}
                 "
@@ -273,7 +275,7 @@ class NestedSetQueryFactory
                 "{$queryAlias}RootNode",
                 '(' . $directNodeSubSelect->getSQL() . ')',
                 "{$queryAlias}SelectedNode",
-                " 
+                "
                     {$queryAlias}RootNode.{$this->levelCol} = 0
                 AND {$queryAlias}RootNode.{$this->rootCol} = {$queryAlias}SelectedNode.{$this->rootCol}
                 "
